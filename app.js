@@ -15,7 +15,10 @@ function falar(texto, velocidade = 1) {
   utterance.rate = velocidade; // velocidade: 0.1 a 10 (normal = 1)
   speechSynthesis.speak(utterance);
 }
-
+// Botões de controle
+document.getElementById("playAudio").onclick = () => {
+  if (utterance) speechSynthesis.speak(utterance);
+};
 // Slider para ajustar velocidade
 document.getElementById("velocidadeAudio").oninput = (e) => {
   const novaVelocidade = parseFloat(e.target.value);
