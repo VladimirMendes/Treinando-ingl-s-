@@ -5,25 +5,19 @@ let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
 const speedControl = document.getElementById("audioSpeed");
-const speedValue = document.getElementById("speedValue");
-
-speedControl.addEventListener("input", () => {
-  speedValue.textContent = speedControl.value + "x";
-});
-
-function playAudio(text) {
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = parseFloat(speedControl.value); // pega do slider
-  speechSynthesis.speak(utterance);
-}
-
 function playAudio(text, speed = 1) {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "en-US";
   utterance.rate = speed; // velocidade (1 = normal, 0.5 = lento, 2 = rápido)
   speechSynthesis.speak(utterance);
 }
+
+const speedControl = document.getElementById("audioSpeed");
+const speedValue = document.getElementById("speedValue");
+
+speedControl.addEventListener("input", () => {
+  speedValue.textContent = speedControl.value + "x";
+});
 
 // 🔹 Carregar arquivos JSON externos
 async function carregarDados() {
