@@ -67,13 +67,6 @@
     </div>
   </div>
 
-  <!-- Controle de velocidade global -->
-  <div style="margin-top:10px">
-    <label for="globalSpeed">Velocidade do áudio:</label>
-    <input id="globalSpeed" type="range" min="0.5" max="2" step="0.1" value="1">
-    <span id="globalSpeedValue">1x</span>
-  </div>
-
   <div class="row" style="margin-top:16px">
     <!-- Treino de frases -->
     <div class="card">
@@ -84,7 +77,6 @@
         <div class="controls" style="margin-top:8px">
           <button id="btnPlayQ" class="secondary">🔊 Ouvir pergunta (EN)</button>
           <button id="btnNext" class="ghost">➡ Próxima</button>
-          
         </div>
       </div>
 
@@ -224,70 +216,21 @@ function classify(user, correct){
   return {status:'err', msg:`Muito diferente (${Math.round(r*100)}%)`, inc:0, sim:r};
 }
 
-<!-- Controle de velocidade TTS integrado -->
-<div class="card" style="margin-top:16px">
-  <p class="title">🎚️ Velocidade da voz (TTS)</p>
-  <div class="controls">
-    <input type="range" id="ttsSpeed" min="0.5" max="2" step="0.1">
-    <span id="ttsSpeedValue"></span>
-  </div>
-</div>
-
-<script>
 /* =========================================================
-   Persistência da velocidade TTS no localStorage
-   ========================================================= */
-const LS_TTS = 'trainer_tts_rate';
-
-// Carrega valor salvo ou padrão 1.0
-let ttsRate = parseFloat(localStorage.getItem(LS_TTS)) || 1.0;
-
-const ttsSlider = document.getElementById('ttsSpeed');
-const ttsDisplay = document.getElementById('ttsSpeedValue');
-
-ttsSlider.value = ttsRate;
-ttsDisplay.textContent = ttsRate.toFixed(1) + 'x';
-
-// Atualiza ttsRate e salva ao mudar
-ttsSlider.addEventListener('input', (e)=>{
-  ttsRate = parseFloat(e.target.value);
-  ttsDisplay.textContent = ttsRate.toFixed(1)+'x';
-  localStorage.setItem(LS_TTS, ttsRate);
-});
-
-/* =========================================================
-   Função TTS atualizada para usar ttsRate
+   TTS – Web Speech API (texto → fala)
    ========================================================= */
 function speakEn(text){
   if(!('speechSynthesis' in window)) { alert('TTS não suportado neste navegador.'); return; }
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-US';
-  u.rate = ttsRate; // aplica a velocidade do slider
-  u.pitch = 1;
-  const voices = speechSynthesis.getVoices();
-  const pref = voices.find(v => /en(-|_)?(US|GB|AU|CA|IN)?/i.test(v.lang)) || voices[0];
+  u.rate = 1; u.pitch = 1;
+  // tenta escolher uma voz inglesa se existir
+  const vs = speechSynthesis.getVoices();
+  const pref = vs.find(v=>/en(-|_)?(US|GB|AU|CA|IN)?/i.test(v.lang)) || vs[0];
   if(pref) u.voice = pref;
   speechSynthesis.cancel(); // evita sobreposição
   speechSynthesis.speak(u);
 }
-
-/* =========================================================
-   Eventos dos botões TTS
-   ========================================================= */
-document.getElementById('btnPlayQ').addEventListener('click', ()=>{ 
-  if(state.current) speakEn(state.current.en_q); 
-});
-
-document.getElementById('btnPlayA').addEventListener('click', ()=>{ 
-  if(state.current) speakEn(state.current.en_a); 
-});
-
-document.getElementById('btnPlayV').addEventListener('click', ()=>{
-  const topic = document.getElementById('selTopic').value;
-  const arr = state.data.vocab[topic] || [];
-  const idx = state.progress.vocabIndexByTopic[topic] || 0;
-  if(arr[idx]) speakEn(arr[idx].en);
-});
 
 /* =========================================================
    STT – Web Speech API (fala → texto) (Chrome-like)
@@ -494,6 +437,7 @@ function renderVocabWord(topic){
   document.getElementById('vEn').textContent = item.en;
   document.getElementById('vIdx').textContent = arr.length ? `${idx+1} / ${arr.length}` : '0 / 0';
 }
+
 /* =========================================================
    Eventos
    ========================================================= */
