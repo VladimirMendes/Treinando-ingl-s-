@@ -30,6 +30,13 @@ function speakWithSpeed(text) {
   speechSynthesis.speak(utterance);
 }
 
+function playAudio(text, speed = 1) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  utterance.rate = speed; // velocidade (1 = normal, 0.5 = lento, 2 = rápido)
+  speechSynthesis.speak(utterance);
+}
+
 // 🔹 Carregar arquivos JSON externos
 async function carregarDados() {
   try {
