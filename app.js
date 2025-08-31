@@ -12,15 +12,17 @@ speedControl.addEventListener('input', () => {
   speedValue.textContent = speedControl.value + "x";
 });
 
-// Função para falar texto em inglês
+// 🔹 Função para falar texto em inglês (com velocidade ajustável)
 function speakTextEn(text) {
+  if (!text) return;
+  speechSynthesis.cancel(); // cancela qualquer fala anterior
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "en-US";
-  utterance.rate = parseFloat(speedControl.value); // aqui pega a velocidade do slider
+  utterance.rate = parseFloat(speedControl.value); // pega do slider
   speechSynthesis.speak(utterance);
 }
 
-// Exemplo de uso no botão
+// 🔹 Botão para repetir a pergunta em inglês
 document.getElementById('btnPlayQ').addEventListener('click', () => {
   const text = document.getElementById('questionEn').innerText;
   speakTextEn(text);
@@ -53,7 +55,7 @@ function mostrarFraseAleatoria(nivel) {
   document.getElementById("pergunta").innerText = frase.pergunta;
   document.getElementById("resposta").innerText = frase.resposta;
 
-  playAudio(frase.pergunta); // agora usa a função com velocidade
+  speakTextEn(frase.pergunta); // ✅ usa função com velocidade
 }
 
 // 🔹 Mostrar vocabulário por tópico
@@ -66,7 +68,7 @@ function mostrarVocabulario(topico) {
   document.getElementById("palavra").innerText = item.palavra;
   document.getElementById("traducao").innerText = item.traducao;
 
-  playAudio(item.palavra); // idem aqui
+  speakTextEn(item.palavra); // ✅ idem aqui
 }
 
 // 🔹 Verificar resposta
