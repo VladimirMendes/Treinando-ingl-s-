@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treino de Inglês - Perguntas e Respostas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #003366;
+    }
+    .level-btn {
+      background: #003366;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .level-btn:hover {
+      background: #0055aa;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 500px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+    #question {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+    #answer {
+      font-size: 18px;
+      color: #006600;
+      display: none;
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+    #showAnswer {
+      background: #ff6600;
+      color: white;
+    }
+    #nextQuestion {
+      background: #008800;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Treino de Inglês 🇬🇧</h1>
+  <p>Escolha um nível para começar:</p>
+
+  <button class="level-btn" onclick="setLevel('facil')">Fácil</button>
+  <button class="level-btn" onclick="setLevel('medio')">Médio</button>
+  <button class="level-btn" onclick="setLevel('dificil')">Difícil</button>
+
+  <div class="card">
+    <div id="question">Clique em um nível para ver a pergunta</div>
+    <div id="answer"></div>
+    <button id="showAnswer" onclick="showAnswer()">Mostrar Resposta</button>
+    <button id="nextQuestion" onclick="nextQuestion()">Próxima Pergunta</button>
+  </div>
+
+  <script>
+    const frases = {
+      facil: [
+        { en: "What is your name?", pt: "Qual é o seu nome?" },
+        { en: "How are you?", pt: "Como você está?" },
+        { en: "Where are you from?", pt: "De onde você é?" },
+        { en: "Do you like pizza?", pt: "Você gosta de pizza?" },
+        { en: "What time is it?", pt: "Que horas são?" }
+      ],
+      medio: [
+        { en: "What do you usually do on weekends?", pt: "O que você costuma fazer nos finais de semana?" },
+        { en: "Can you tell me about your family?", pt: "Você pode me falar sobre sua família?" },
+        { en: "What is your favorite movie and why?", pt: "Qual é o seu filme favorito e por quê?" },
+        { en: "Do you prefer summer or winter?", pt: "Você prefere verão ou inverno?" },
+        { en: "What kind of music do you like?", pt: "Que tipo de música você gosta?" }
+      ],
+      dificil: [
+        { en: "If you could travel anywhere in the world, where would you go?", pt: "Se você pudesse viajar para qualquer lugar do mundo, para onde iria?" },
+        { en: "What would you do if you won the lottery?", pt: "O que você faria se ganhasse na loteria?" },
+        { en: "Can you describe a challenge you overcame?", pt: "Você pode descrever um desafio que superou?" },
+        { en: "What do you think about climate change?", pt: "O que você acha sobre as mudanças climáticas?" },
+        { en: "How would you improve education in your country?", pt: "Como você melhoraria a educação no seu país?" }
+      ]
+    };
+
+    let currentLevel = null;
+    let currentQuestion = null;
+
+    function setLevel(level) {
+      currentLevel = level;
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      if (!currentLevel) {
+        alert("Escolha um nível primeiro!");
+        return;
+      }
+      let lista = frases[currentLevel];
+      currentQuestion = lista[Math.floor(Math.random() * lista.length)];
+      document.getElementById("question").textContent = currentQuestion.en;
+      document.getElementById("answer").textContent = currentQuestion.pt;
+      document.getElementById("answer").style.display = "none";
+    }
+
+    function showAnswer() {
+      if (currentQuestion) {
+        document.getElementById("answer").style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>
