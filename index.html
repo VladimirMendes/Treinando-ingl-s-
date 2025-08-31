@@ -319,7 +319,7 @@ state
   qPt.textContent = state.current.pt_q || '';
   aEn.textContent = state.current.en_a;
   aPt.textContent = state.current.pt_a || '';
-  qPtRow.style.display = (state.level==='Fácil' || (state.level==='Médio' && state.showPt); (state.level==='Difícil' && state.showPt))? 'block' : 'none';
+  qPtRow.style.display = (state.level==='Fácil' && state.showPt); (state.level==='Médio' && state.showPt); (state.level==='Difícil' && state.showPt) ? 'block' : 'none';
 
   if(resetInput){
     document.getElementById('txtAnswer').value = '';
