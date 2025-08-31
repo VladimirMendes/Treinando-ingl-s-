@@ -309,7 +309,7 @@ function renderQA(resetInput=false){
   const aEn = document.getElementById('answerEn');
   const aPt = document.getElementById('answerPt');
   const fb = document.getElementById('feedbackMsg');
-
+state
   if(!state.current){
     qEn.textContent = 'Sem frases neste nível. Atualize /data/frases.json.';
     qPtRow.style.display='none'; aEn.textContent=''; aPt.textContent=''; return;
@@ -319,7 +319,7 @@ function renderQA(resetInput=false){
   qPt.textContent = state.current.pt_q || '';
   aEn.textContent = state.current.en_a;
   aPt.textContent = state.current.pt_a || '';
-  qPtRow.style.display = (state.level==='Fácil' || (state.level==='Médio' && state.showPt)) ? 'block' : 'none';
+  qPtRow.style.display = (state.level==='Fácil' || (state.level==='Médio' && state.showPt); (state.level==='Difícil' && state.showPt)) ? 'block' : 'none';
 
   if(resetInput){
     document.getElementById('txtAnswer').value = '';
