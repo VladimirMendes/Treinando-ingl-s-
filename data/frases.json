@@ -1,0 +1,17 @@
+{
+  "Fácil": [
+    {"en_q": "Hi, how are you?", "pt_q": "Oi, como você está?", "en_a": "I'm fine, thanks.", "pt_a": "Estou bem, obrigado."},
+    {"en_q": "What's your name?", "pt_q": "Qual é o seu nome?", "en_a": "My name is John.", "pt_a": "Meu nome é John."},
+    {"en_q": "Do you like coffee?", "pt_q": "Você gosta de café?", "en_a": "Yes, I like coffee.", "pt_a": "Sim, eu gosto de café."}
+  ],
+  "Médio": [
+    {"en_q": "Where is the box?", "pt_q": "Onde está a caixa?", "en_a": "The box is on the table.", "pt_a": "A caixa está na mesa."},
+    {"en_q": "Can you help me?", "pt_q": "Você pode me ajudar?", "en_a": "Yes, I can help you.", "pt_a": "Sim, eu posso te ajudar."},
+    {"en_q": "What time is the meeting?", "pt_q": "Que horas é a reunião?", "en_a": "It starts at nine.", "pt_a": "Começa às nove."}
+  ],
+  "Difícil": [
+    {"en_q": "Do we have this item in stock?", "pt_q": "Temos este item em estoque?", "en_a": "Yes, we have it.", "pt_a": "Sim, temos."},
+    {"en_q": "Please, sign the paper.", "pt_q": "Por favor, assine o papel.", "en_a": "Okay, I will sign.", "pt_a": "Ok, eu vou assinar."},
+    {"en_q": "Could you forward the updated report by noon?", "pt_q": "Você poderia encaminhar o relatório atualizado até o meio-dia?", "en_a": "Sure, I'll send it before noon.", "pt_a": "Claro, vou enviar antes do meio-dia."}
+  ]
+}
