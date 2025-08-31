@@ -4,27 +4,30 @@ let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
-const speedControl = document.getElementById('audioSpeed');
-const speedValue = document.getElementById('speedValue');
+// 🔹 Controle de velocidade global
+let audioRate = 1;
+const speedControl = document.getElementById("audioSpeed");
+const speedValue = document.getElementById("speedValue");
 
-// Atualiza o valor exibido ao mover o controle
-speedControl.addEventListener('input', () => {
-  speedValue.textContent = speedControl.value + "x";
+// Atualiza valor ao mover o slider
+speedControl.addEventListener("input", () => {
+  audioRate = parseFloat(speedControl.value);
+  speedValue.textContent = audioRate.toFixed(1) + "x";
 });
 
-// 🔹 Função para falar texto em inglês (com velocidade ajustável)
+// 🔹 Função para falar texto em inglês (com velocidade global)
 function speakTextEn(text) {
   if (!text) return;
   speechSynthesis.cancel(); // cancela qualquer fala anterior
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "en-US";
-  utterance.rate = parseFloat(speedControl.value); // pega do slider
+  utterance.rate = audioRate; // 👈 usa velocidade global
   speechSynthesis.speak(utterance);
 }
 
 // 🔹 Botão para repetir a pergunta em inglês
-document.getElementById('btnPlayQ').addEventListener('click', () => {
-  const text = document.getElementById('questionEn').innerText;
+document.getElementById("btnPlayQ").addEventListener("click", () => {
+  const text = document.getElementById("questionEn").innerText;
   speakTextEn(text);
 });
 
@@ -55,7 +58,7 @@ function mostrarFraseAleatoria(nivel) {
   document.getElementById("pergunta").innerText = frase.pergunta;
   document.getElementById("resposta").innerText = frase.resposta;
 
-  speakTextEn(frase.pergunta); // ✅ usa função com velocidade
+  speakTextEn(frase.pergunta); // ✅ já respeita velocidade global
 }
 
 // 🔹 Mostrar vocabulário por tópico
