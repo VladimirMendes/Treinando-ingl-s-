@@ -4,26 +4,39 @@ let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
-// Velocidade global inicial
-let globalAudioRate = 1;
+/* =========================================================
+   Velocidade global do áudio
+   ========================================================= */
+let globalAudioRate = 1; // valor inicial = 1x
 
-// Atualiza quando o usuário mexe no controle
-document.getElementById('globalSpeed').addEventListener('input', function() {
-  globalAudioRate = parseFloat(this.value);
-  document.getElementById('globalSpeedValue').textContent = globalAudioRate.toFixed(1) + "x";
+const globalSpeed = document.getElementById('globalSpeed');
+const globalSpeedValue = document.getElementById('globalSpeedValue');
+
+// Atualiza ao mover o controle
+globalSpeed.addEventListener('input', () => {
+  globalAudioRate = parseFloat(globalSpeed.value);
+  globalSpeedValue.textContent = globalAudioRate.toFixed(1) + "x";
 });
 
-// Função para falar texto (perguntas, respostas, vocabulário etc.)
-function speakText(text, lang = "en-US") {
-  if (!window.speechSynthesis) {
-    alert("Seu navegador não suporta leitura de áudio.");
+/* =========================================================
+   TTS – Web Speech API (texto → fala)
+   ========================================================= */
+function speakEn(text){
+  if(!('speechSynthesis' in window)) {
+    alert('TTS não suportado neste navegador.');
     return;
   }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = globalAudioRate;  // ✅ usa a velocidade global
+  u.pitch = 1;
 
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = lang;
-  utterance.rate = globalAudioRate; // 👈 aplica velocidade global
-  window.speechSynthesis.speak(utterance);
+  const vs = speechSynthesis.getVoices();
+  const pref = vs.find(v=>/en(-|_)?(US|GB|AU|CA|IN)?/i.test(v.lang)) || vs[0];
+  if(pref) u.voice = pref;
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
 }
 // 🔹 Botão para repetir a pergunta em inglês
 document.getElementById("btnPlayQ").addEventListener("click", () => {
