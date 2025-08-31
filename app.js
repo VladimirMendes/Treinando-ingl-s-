@@ -4,40 +4,27 @@ let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
-/* =========================================================
-   Velocidade global do áudio
-   ========================================================= */
-let globalAudioRate = 1; // valor inicial = 1x
-
-const globalSpeed = document.getElementById('globalSpeed');
-const globalSpeedValue = document.getElementById('globalSpeedValue');
-
-// Atualiza ao mover o controle
-globalSpeed.addEventListener('input', () => {
-  globalAudioRate = parseFloat(globalSpeed.value);
-  globalSpeedValue.textContent = globalAudioRate.toFixed(1) + "x";
-});
-
-/* =========================================================
-   TTS – Web Speech API (texto → fala)
-   ========================================================= */
 function speakEn(text){
-  if(!('speechSynthesis' in window)) {
-    alert('TTS não suportado neste navegador.');
-    return;
+  if(!('speechSynthesis' in window)) { 
+    alert('TTS não suportado neste navegador.'); 
+    return; 
   }
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-US';
-  u.rate = globalAudioRate;  // ✅ usa a velocidade global
+
+  // pega a velocidade do controle
+  const speed = parseFloat(document.getElementById('speedControl')?.value) || 1;
+  u.rate = speed;
   u.pitch = 1;
 
   const vs = speechSynthesis.getVoices();
   const pref = vs.find(v=>/en(-|_)?(US|GB|AU|CA|IN)?/i.test(v.lang)) || vs[0];
   if(pref) u.voice = pref;
 
-  speechSynthesis.cancel();
+  speechSynthesis.cancel(); 
   speechSynthesis.speak(u);
 }
+
 // 🔹 Botão para repetir a pergunta em inglês
 document.getElementById("btnPlayQ").addEventListener("click", () => {
   const text = document.getElementById("questionEn").innerText;
