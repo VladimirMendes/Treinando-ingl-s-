@@ -3,43 +3,7 @@ let vocabulario = {};
 let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
-let utterance; // variável global para o controle
 
-function falar(texto, velocidade = 1) {
-  if (speechSynthesis.speaking) {
-    speechSynthesis.cancel(); // cancela fala anterior
-  }
-  utterance = new SpeechSynthesisUtterance(texto);
-  utterance.lang = "en-US";
-  utterance.rate = velocidade; // velocidade: 0.1 a 10 (normal = 1)
-  speechSynthesis.speak(utterance);
-}
-
-// Botões de controle
-document.getElementById("playAudio").onclick = () => {
-  if (utterance) speechSynthesis.speak(utterance);
-};
-
-document.getElementById("pauseAudio").onclick = () => {
-  speechSynthesis.pause();
-};
-
-document.getElementById("resumeAudio").onclick = () => {
-  speechSynthesis.resume();
-};
-
-document.getElementById("stopAudio").onclick = () => {
-  speechSynthesis.cancel();
-};
-
-// Slider para ajustar velocidade
-document.getElementById("velocidadeAudio").oninput = (e) => {
-  const novaVelocidade = parseFloat(e.target.value);
-  if (utterance) {
-    speechSynthesis.cancel();
-    falar(utterance.text, novaVelocidade);
-  }
-};
 // 🔹 Carregar arquivos JSON externos
 async function carregarDados() {
   try {
