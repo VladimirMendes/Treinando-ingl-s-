@@ -4,9 +4,7 @@ let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
-<label for="speed">Velocidade:</label>
-<input type="range" id="speed" min="0.5" max="1.5" step="0.1" value="1">
-<span id="speedValue">1.0x</span>
+// Controle de velocidade
 const speedControl = document.getElementById('speed');
 const speedValue = document.getElementById('speedValue');
 
@@ -14,11 +12,12 @@ speedControl.addEventListener('input', () => {
   speedValue.textContent = speedControl.value + 'x';
 });
 
+// Função de áudio com velocidade
 function speakWithSpeed(text) {
   const rate = parseFloat(speedControl.value);
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'en-US';
-  utterance.rate = rate;
+  utterance.rate = rate; // aqui ajusta a velocidade
   speechSynthesis.speak(utterance);
 }
 
