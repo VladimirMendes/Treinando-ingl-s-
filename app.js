@@ -4,25 +4,25 @@ let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
-// 🔹 Controle de velocidade global
+// Valor global da velocidade do áudio
 let audioRate = 1;
-const speedControl = document.getElementById("audioSpeed");
-const speedValue = document.getElementById("speedValue");
 
-// Atualiza valor ao mover o slider
-speedControl.addEventListener("input", () => {
-  audioRate = parseFloat(speedControl.value);
-  speedValue.textContent = audioRate.toFixed(1) + "x";
+// Controle global
+document.getElementById("globalAudioSpeed").addEventListener("input", function () {
+  audioRate = parseFloat(this.value);
+  document.getElementById("globalSpeedValue").textContent = audioRate.toFixed(1) + "x";
 });
 
-// 🔹 Função para falar texto em inglês (com velocidade global)
-function speakTextEn(text) {
-  if (!text) return;
-  speechSynthesis.cancel(); // cancela qualquer fala anterior
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = audioRate; // 👈 usa velocidade global
-  speechSynthesis.speak(utterance);
+// Função para falar texto em áudio (com velocidade global)
+function speakText(text, lang = "en-US") {
+  if ('speechSynthesis' in window) {
+    let utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang;
+    utterance.rate = audioRate; // 👈 aplica a velocidade global
+    speechSynthesis.speak(utterance);
+  } else {
+    alert("Seu navegador não suporta síntese de voz.");
+  }
 }
 
 // 🔹 Botão para repetir a pergunta em inglês
