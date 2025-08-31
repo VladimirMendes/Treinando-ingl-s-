@@ -4,29 +4,17 @@ let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
-// Controle de velocidade
-// Elementos do controle de velocidade
-const speedControl = document.getElementById("speed");
+const speedControl = document.getElementById("audioSpeed");
 const speedValue = document.getElementById("speedValue");
 
-// Atualiza o valor mostrado na tela
 speedControl.addEventListener("input", () => {
   speedValue.textContent = speedControl.value + "x";
 });
 
-// Função de fala com controle de velocidade
-function speakWithSpeed(text) {
-  // Interrompe qualquer fala anterior
-  speechSynthesis.cancel();
-
-  const rate = parseFloat(speedControl.value);
+function playAudio(text) {
   const utterance = new SpeechSynthesisUtterance(text);
-
-  utterance.lang = "en-US";   // ou "pt-BR" se for português
-  utterance.rate = rate;      // <<< aqui controla a velocidade
-  utterance.pitch = 1;        // tom normal
-  utterance.volume = 1;       // volume normal
-
+  utterance.lang = "en-US";
+  utterance.rate = parseFloat(speedControl.value); // pega do slider
   speechSynthesis.speak(utterance);
 }
 
