@@ -4,21 +4,26 @@ let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
-const speedControl = document.getElementById("audioSpeed");
-const utterance = new SpeechSynthesisUtterance(text);
-utterance.lang = 'en-US';
+const speedControl = document.getElementById('audioSpeed');
+const speedValue = document.getElementById('speedValue');
 
-// pega o valor do controle de velocidade
-const speed = parseFloat(document.getElementById("audioSpeed").value);
-utterance.rate = speed; // aplica no áudio
-
-speechSynthesis.speak(utterance);
-
-const speedControl = document.getElementById("audioSpeed");
-const speedValue = document.getElementById("speedValue");
-
-speedControl.addEventListener("input", () => {
+// Atualiza o valor exibido ao mover o controle
+speedControl.addEventListener('input', () => {
   speedValue.textContent = speedControl.value + "x";
+});
+
+// Função para falar texto em inglês
+function speakTextEn(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  utterance.rate = parseFloat(speedControl.value); // aqui pega a velocidade do slider
+  speechSynthesis.speak(utterance);
+}
+
+// Exemplo de uso no botão
+document.getElementById('btnPlayQ').addEventListener('click', () => {
+  const text = document.getElementById('questionEn').innerText;
+  speakTextEn(text);
 });
 
 // 🔹 Carregar arquivos JSON externos
