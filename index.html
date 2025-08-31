@@ -1,133 +1,482 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Treino de Inglês - Perguntas e Respostas</title>
+  <meta charset="UTF-8" />
+  <title>English Dialogue Trainer – Web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0ea5e9" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #f0f8ff;
-      margin: 0;
-      padding: 20px;
+    :root{
+      --bg:#0b1220; --card:#0f172a; --muted:#94a3b8; --text:#e2e8f0; --brand:#0ea5e9; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
+      --soft:#1e293b;
     }
-    h1 {
-      color: #003366;
-    }
-    .level-btn {
-      background: #003366;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 5px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .level-btn:hover {
-      background: #0055aa;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 500px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
-    #question {
-      font-size: 20px;
-      color: #333;
-      margin-bottom: 15px;
-    }
-    #answer {
-      font-size: 18px;
-      color: #006600;
-      display: none;
-      margin-top: 10px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-    }
-    #showAnswer {
-      background: #ff6600;
-      color: white;
-    }
-    #nextQuestion {
-      background: #008800;
-      color: white;
-    }
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b1220,#0b1220 50%,#101a34);color:var(--text)}
+    .app{max-width:1100px;margin:0 auto;padding:24px}
+    .header{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+    .badge{background:rgba(14,165,233,.15);border:1px solid rgba(14,165,233,.35);color:#7dd3fc;padding:2px 8px;border-radius:999px;font-size:12px}
+    h1{margin:0;font-size:22px}
+    .row{display:grid;gap:16px}
+    @media (min-width:1000px){.row{grid-template-columns:2fr 1fr}}
+    .card{background:linear-gradient(180deg,rgba(148,163,184,.1),rgba(148,163,184,.03));border:1px solid rgba(148,163,184,.18);border-radius:16px;padding:16px}
+    .title{font-size:16px;margin:0 0 8px 0;color:#cbd5e1}
+    .sub{font-size:13px;color:var(--muted);margin:0 0 12px}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    button, .btn{background:linear-gradient(180deg,#0ea5e9,#0284c7);border:none;color:white;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:600}
+    button.secondary{background:linear-gradient(180deg,#1f2937,#111827);border:1px solid #334155}
+    button.ghost{background:transparent;border:1px solid #334155}
+    button.ok{background:linear-gradient(180deg,#22c55e,#16a34a)}
+    button.warn{background:linear-gradient(180deg,#f59e0b,#d97706)}
+    button.err{background:linear-gradient(180deg,#ef4444,#dc2626)}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .grid2{display:grid;gap:12px}
+    @media(min-width:700px){.grid2{grid-template-columns:1fr 1fr}}
+    .pill{display:inline-flex;gap:8px;align-items:center;background:#0b1020;border:1px solid #26314b;color:#8ab4ff;padding:6px 10px;border-radius:999px;font-size:12px}
+    .divider{height:1px;background:rgba(148,163,184,.18);margin:16px 0}
+    .muted{color:var(--muted)}
+    input[type="text"]{width:100%;padding:12px 12px;border-radius:12px;border:1px solid #334155;background:#0b1020;color:var(--text)}
+    .kpi{display:flex;gap:12px;flex-wrap:wrap}
+    .kpi .item{background:#0b1020;border:1px solid #334155;border-radius:12px;padding:8px 12px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{border-bottom:1px dashed rgba(148,163,184,.2);padding:8px 6px;text-align:left}
+    .chip{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid #334155;background:#0b1020;font-size:12px;color:#a5b4fc}
+    details{border:1px solid #334155;border-radius:12px;padding:10px}
+    summary{cursor:pointer;color:#a5b4fc}
+    .hint{font-size:13px;color:#93c5fd}
   </style>
 </head>
 <body>
-  <h1>Treino de Inglês 🇬🇧</h1>
-  <p>Escolha um nível para começar:</p>
+<div class="app">
+  <div class="header">
+    <span class="badge">📦 Almoxarifado + Conversação</span>
+    <h1>English Dialogue Trainer – Web</h1>
+  </div>
+  <p class="sub">Perguntas e respostas aparecem em <b>inglês</b> com <b>tradução em português</b> (dependendo do nível). Voz: texto ↔ fala + fala ↔ texto no navegador.</p>
 
-  <button class="level-btn" onclick="setLevel('facil')">Fácil</button>
-  <button class="level-btn" onclick="setLevel('medio')">Médio</button>
-  <button class="level-btn" onclick="setLevel('dificil')">Difícil</button>
-
+  <!-- Config -->
   <div class="card">
-    <div id="question">Clique em um nível para ver a pergunta</div>
-    <div id="answer"></div>
-    <button id="showAnswer" onclick="showAnswer()">Mostrar Resposta</button>
-    <button id="nextQuestion" onclick="nextQuestion()">Próxima Pergunta</button>
+    <p class="title">Configurações • Nível e Ajuda</p>
+    <div class="controls" id="levelControls">
+      <label><input type="radio" name="level" value="Fácil" checked> Fácil</label>
+      <label><input type="radio" name="level" value="Médio"> Médio</label>
+      <label><input type="radio" name="level" value="Difícil"> Difícil</label>
+      <label style="margin-left:12px"><input type="checkbox" id="ckShowPt"> Mostrar tradução (Médio)</label>
+    </div>
+    <div class="kpi" style="margin-top:8px">
+      <div class="item">Pontuação: <b id="kpiScore">0</b></div>
+      <div class="item">🔥 Streak: <b id="kpiStreak">0</b></div>
+    </div>
   </div>
 
-  <script>
-    const frases = {
-      facil: [
-        { en: "What is your name?", pt: "Qual é o seu nome?" },
-        { en: "How are you?", pt: "Como você está?" },
-        { en: "Where are you from?", pt: "De onde você é?" },
-        { en: "Do you like pizza?", pt: "Você gosta de pizza?" },
-        { en: "What time is it?", pt: "Que horas são?" }
-      ],
-      medio: [
-        { en: "What do you usually do on weekends?", pt: "O que você costuma fazer nos finais de semana?" },
-        { en: "Can you tell me about your family?", pt: "Você pode me falar sobre sua família?" },
-        { en: "What is your favorite movie and why?", pt: "Qual é o seu filme favorito e por quê?" },
-        { en: "Do you prefer summer or winter?", pt: "Você prefere verão ou inverno?" },
-        { en: "What kind of music do you like?", pt: "Que tipo de música você gosta?" }
-      ],
-      dificil: [
-        { en: "If you could travel anywhere in the world, where would you go?", pt: "Se você pudesse viajar para qualquer lugar do mundo, para onde iria?" },
-        { en: "What would you do if you won the lottery?", pt: "O que você faria se ganhasse na loteria?" },
-        { en: "Can you describe a challenge you overcame?", pt: "Você pode descrever um desafio que superou?" },
-        { en: "What do you think about climate change?", pt: "O que você acha sobre as mudanças climáticas?" },
-        { en: "How would you improve education in your country?", pt: "Como você melhoraria a educação no seu país?" }
-      ]
-    };
+  <div class="row" style="margin-top:16px">
+    <!-- Treino de frases -->
+    <div class="card">
+      <p class="title">Frase para treinar</p>
+      <div id="qaArea">
+        <div style="margin-bottom:6px"><span class="chip">EN</span> <span id="questionEn" class="mono"></span></div>
+        <div id="questionPtRow" class="muted" style="display:none;margin-bottom:10px"><span class="chip">PT</span> <span id="questionPt"></span></div>
+        <div class="controls" style="margin-top:8px">
+          <button id="btnPlayQ" class="secondary">🔊 Ouvir pergunta (EN)</button>
+          <button id="btnNext" class="ghost">➡ Próxima</button>
+        </div>
+      </div>
 
-    let currentLevel = null;
-    let currentQuestion = null;
+      <div class="divider"></div>
 
-    function setLevel(level) {
-      currentLevel = level;
-      nextQuestion();
+      <details>
+        <summary>💡 Resposta sugerida</summary>
+        <div style="margin-top:8px">
+          <div style="margin-bottom:6px"><span class="chip">EN</span> <span id="answerEn" class="mono"></span></div>
+          <div class="muted" style="margin-bottom:10px"><span class="chip">PT</span> <span id="answerPt"></span></div>
+          <button id="btnPlayA" class="secondary">🔊 Ouvir resposta (EN)</button>
+        </div>
+      </details>
+
+      <div class="divider"></div>
+
+      <div class="grid2">
+        <div>
+          <p class="title">Responder por texto</p>
+          <input type="text" id="txtAnswer" placeholder="Digite sua resposta em inglês…" />
+          <div class="controls" style="margin-top:8px">
+            <button id="btnCheck" class="ok">✅ Verificar (texto)</button>
+          </div>
+          <p id="feedbackMsg" class="sub"></p>
+        </div>
+        <div>
+          <p class="title">🎙️ Responder falando</p>
+          <div class="controls">
+            <button id="btnRec" class="warn">🎤 Gravar / Parar</button>
+            <button id="btnVerifyRec" class="ok">🗣️ Transcrever e verificar</button>
+          </div>
+          <p id="heard" class="muted" style="margin-top:6px"></p>
+          <p id="recSupport" class="hint"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vocabulário -->
+    <div class="card">
+      <p class="title">📖 Vocabulário por tópicos</p>
+      <div class="controls" style="margin-bottom:8px">
+        <select id="selTopic"></select>
+      </div>
+      <div id="vocabOne">
+        <div style="margin-bottom:6px"><span class="chip">PT</span> <span id="vPt" class="mono"></span></div>
+        <div class="muted" style="margin-bottom:10px"><span class="chip">EN</span> <span id="vEn"></span></div>
+        <div class="controls">
+          <button id="btnPlayV" class="secondary">🔊 Ouvir palavra (EN)</button>
+          <button id="btnPrevV" class="ghost">⬅ Anterior</button>
+          <button id="btnNextV" class="ghost">➡ Próxima</button>
+        </div>
+        <p class="sub" id="vIdx"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Histórico -->
+  <div class="card" style="margin-top:16px">
+    <p class="title">🧾 Histórico de respostas</p>
+    <div id="histEmpty" class="muted">Nenhum registro ainda.</div>
+    <div id="histTableWrap" style="display:none;overflow:auto">
+      <table id="histTable">
+        <thead>
+          <tr><th>Nível</th><th>Pergunta (EN)</th><th>Correta (EN)</th><th>Você</th><th>Resultado</th><th>Similar</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="divider"></div>
+    <p class="title">📌 Palavras/frases difíceis (reforço)</p>
+    <div id="hardList" class="muted">Nenhuma por enquanto 🚀</div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   CONFIG: caminhos dos “bancos de dados” (JSON no repositório)
+   ========================================================= */
+const DATA = {
+  frasesURL: 'data/frases.json',        // array por nível: { "Fácil":[{en_q, pt_q, en_a, pt_a}], "Médio":[...], "Difícil":[...] }
+  vocabURL: 'data/vocabulario.json'     // { "Tópico":[{"pt":"Olá","en":"Hello"}, ...], ... }
+};
+
+/* =========================================================
+   Estado + Persistência (localStorage)
+   ========================================================= */
+const LS_KEY = 'trainer_progress_v2';
+function loadProgress(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {
+    score:0, streak:0, history:[], difficult:{}, // difficult usa chave pelo inglês da resposta
+    lastLevel:'Fácil',
+    vocabIndexByTopic:{}
+  }; } catch(e){ return {score:0,streak:0,history:[],difficult:{},lastLevel:'Fácil',vocabIndexByTopic:{}}; }
+}
+function saveProgress(){ localStorage.setItem(LS_KEY, JSON.stringify(state.progress)); }
+
+const state = {
+  data:{ frases:{Fácil:[],Médio:[],Difícil:[]}, vocab:{} },
+  level:'Fácil',
+  showPt:false,
+  current:null,         // objeto da frase atual
+  transcribed:'',       // último texto reconhecido por voz
+  progress:loadProgress()
+};
+
+/* =========================================================
+   Utilidades de texto / similaridade
+   ========================================================= */
+function normalize(s){ return (s||'').toLowerCase()
+  .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+  .replace(/[^a-z0-9' ]+/g,' ').replace(/\s+/g,' ').trim(); }
+
+// Levenshtein ratio
+function levRatio(a,b){
+  a = normalize(a); b = normalize(b);
+  const m=a.length, n=b.length;
+  if(m===0 && n===0) return 1;
+  const dp = Array.from({length:m+1},()=>Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0]=i;
+  for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      const cost = a[i-1]===b[j-1]?0:1;
+      dp[i][j]=Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+cost);
     }
+  }
+  const dist = dp[m][n];
+  return 1 - dist / Math.max(m,n);
+}
 
-    function nextQuestion() {
-      if (!currentLevel) {
-        alert("Escolha um nível primeiro!");
-        return;
-      }
-      let lista = frases[currentLevel];
-      currentQuestion = lista[Math.floor(Math.random() * lista.length)];
-      document.getElementById("question").textContent = currentQuestion.en;
-      document.getElementById("answer").textContent = currentQuestion.pt;
-      document.getElementById("answer").style.display = "none";
-    }
+function classify(user, correct){
+  const r = levRatio(user, correct);
+  if(r >= 0.99) return {status:'success', msg:'✅ Correto!', inc:1, sim:r};
+  if(r >= 0.90) return {status:'info', msg:`Quase perfeito (${Math.round(r*100)}%)`, inc:0, sim:r};
+  if(r >= 0.75) return {status:'info', msg:`Pequeno erro (${Math.round(r*100)}%)`, inc:0, sim:r};
+  if(r >= 0.60) return {status:'warn', msg:`Erro moderado (${Math.round(r*100)}%)`, inc:0, sim:r};
+  return {status:'err', msg:`Muito diferente (${Math.round(r*100)}%)`, inc:0, sim:r};
+}
 
-    function showAnswer() {
-      if (currentQuestion) {
-        document.getElementById("answer").style.display = "block";
-      }
-    }
-  </script>
-</body>
-</html>
+/* =========================================================
+   TTS – Web Speech API (texto → fala)
+   ========================================================= */
+function speakEn(text){
+  if(!('speechSynthesis' in window)) { alert('TTS não suportado neste navegador.'); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 1; u.pitch = 1;
+  // tenta escolher uma voz inglesa se existir
+  const vs = speechSynthesis.getVoices();
+  const pref = vs.find(v=>/en(-|_)?(US|GB|AU|CA|IN)?/i.test(v.lang)) || vs[0];
+  if(pref) u.voice = pref;
+  speechSynthesis.cancel(); // evita sobreposição
+  speechSynthesis.speak(u);
+}
+
+/* =========================================================
+   STT – Web Speech API (fala → texto) (Chrome-like)
+   ========================================================= */
+let rec=null, recActive=false;
+function initRecognizer(){
+  const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!R){
+    document.getElementById('recSupport').textContent = 'Reconhecimento de voz não suportado neste navegador (recomendado Chrome).';
+    return;
+  }
+  rec = new R();
+  rec.lang = 'en-US';
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  rec.onresult = (e)=>{
+    const t = e.results[0][0].transcript;
+    state.transcribed = t;
+    document.getElementById('heard').textContent = `Você disse: “${t}”`;
+  };
+  rec.onerror = (e)=>{ document.getElementById('heard').textContent = `Erro no reconhecimento: ${e.error}`; };
+  rec.onend = ()=>{ recActive=false; document.getElementById('btnRec').textContent='🎤 Gravar / Parar'; };
+  document.getElementById('recSupport').textContent = 'Dica: Fale pausadamente. O idioma de reconhecimento está em inglês (en-US).';
+}
+
+/* =========================================================
+   Carregamento dos bancos (JSON externos)
+   ========================================================= */
+async function loadData(){
+  try{
+    const [fr, vb] = await Promise.all([
+      fetch(DATA.frasesURL).then(r=>r.json()),
+      fetch(DATA.vocabURL).then(r=>r.json())
+    ]);
+    // Normaliza estrutura esperada
+    state.data.frases.Fácil   = Array.isArray(fr['Fácil'])   ? fr['Fácil']   : [];
+    state.data.frases.Médio   = Array.isArray(fr['Médio'])   ? fr['Médio']   : [];
+    state.data.frases.Difícil = Array.isArray(fr['Difícil']) ? fr['Difícil'] : [];
+    state.data.vocab = vb || {};
+  }catch(e){
+    alert('Falha ao carregar os bancos (frases/vocabulário). Verifique /data/*.json');
+    console.error(e);
+  }
+}
+
+/* =========================================================
+   Seleção e reforço de frases
+   ========================================================= */
+function getPool(level){
+  // Cada item: { en_q, pt_q, en_a, pt_a }
+  return state.data.frases[level] || [];
+}
+
+function pickNext(){
+  const pool = getPool(state.level);
+  if(!pool.length){ state.current=null; renderQA(); return; }
+
+  // 30% de chance de reforçar algo difícil, se existir no nível atual
+  const keys = Object.keys(state.progress.difficult || {});
+  const hardForLevel = pool.filter(p => keys.includes(p.en_a));
+  if(hardForLevel.length && Math.random() < 0.30){
+    state.current = hardForLevel[Math.floor(Math.random()*hardForLevel.length)];
+  }else{
+    state.current = pool[Math.floor(Math.random()*pool.length)];
+  }
+  renderQA(true);
+}
+
+/* =========================================================
+   Renderização da UI de frases
+   ========================================================= */
+function renderQA(resetInput=false){
+  const qEn = document.getElementById('questionEn');
+  const qPt = document.getElementById('questionPt');
+  const qPtRow = document.getElementById('questionPtRow');
+  const aEn = document.getElementById('answerEn');
+  const aPt = document.getElementById('answerPt');
+  const fb = document.getElementById('feedbackMsg');
+
+  if(!state.current){
+    qEn.textContent = 'Sem frases neste nível. Atualize /data/frases.json.';
+    qPtRow.style.display='none'; aEn.textContent=''; aPt.textContent=''; return;
+  }
+
+  qEn.textContent = state.current.en_q;
+  qPt.textContent = state.current.pt_q || '';
+  aEn.textContent = state.current.en_a;
+  aPt.textContent = state.current.pt_a || '';
+  qPtRow.style.display = (state.level==='Fácil' || (state.level==='Médio' && state.showPt)) ? 'block' : 'none';
+
+  if(resetInput){
+    document.getElementById('txtAnswer').value = '';
+    document.getElementById('heard').textContent = '';
+    state.transcribed = '';
+    fb.textContent='';
+  }
+}
+
+function renderKPIs(){
+  document.getElementById('kpiScore').textContent = state.progress.score;
+  document.getElementById('kpiStreak').textContent = state.progress.streak;
+}
+
+function addHistoryRow(entry){
+  state.progress.history.push(entry);
+  saveProgress();
+
+  const wrap = document.getElementById('histTableWrap');
+  const empty = document.getElementById('histEmpty');
+  const tbody = document.querySelector('#histTable tbody');
+  empty.style.display = 'none';
+  wrap.style.display = 'block';
+
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${entry.level}</td>
+    <td class="mono">${entry.question}</td>
+    <td class="mono">${entry.answerCorrect}</td>
+    <td class="mono">${entry.answerUser}</td>
+    <td>${entry.result}</td>
+    <td>${entry.similarity}</td>
+  `;
+  tbody.prepend(tr); // mais recente em cima
+}
+
+function renderDifficult(){
+  const div = document.getElementById('hardList');
+  const entries = Object.entries(state.progress.difficult).sort((a,b)=>b[1]-a[1]);
+  if(!entries.length){ div.textContent='Nenhuma por enquanto 🚀'; return; }
+  div.innerHTML = entries.map(([k,v])=>`• ${k} <span class="muted">(erros: ${v})</span>`).join('<br/>');
+}
+
+/* =========================================================
+   Verificação de respostas
+   ========================================================= */
+function verifyAnswer(userText){
+  if(!state.current){ return; }
+  const correct = state.current.en_a;
+  const res = classify(userText, correct);
+
+  const entry = {
+    level: state.level,
+    question: state.current.en_q,
+    answerCorrect: correct,
+    answerUser: userText || '(vazio)',
+    result: res.status,
+    similarity: Math.round(res.sim*100)+'%'
+  };
+  addHistoryRow(entry);
+
+  // score + streak
+  state.progress.score += res.inc;
+  state.progress.streak = res.inc ? (state.progress.streak+1) : 0;
+  renderKPIs();
+
+  // difíceis
+  if(res.status!=='success'){
+    state.progress.difficult[correct] = (state.progress.difficult[correct]||0)+1;
+  }
+  saveProgress();
+
+  // feedback visual
+  const fb = document.getElementById('feedbackMsg');
+  fb.style.color = res.status==='success' ? '#22c55e' :
+                   res.status==='info'    ? '#93c5fd' :
+                   res.status==='warn'    ? '#f59e0b' : '#ef4444';
+  fb.textContent = res.msg;
+}
+
+/* =========================================================
+   Vocabulário: 1 por vez, com áudio
+   ========================================================= */
+function initVocab(){
+  const sel = document.getElementById('selTopic');
+  sel.innerHTML = '';
+  const topics = Object.keys(state.data.vocab);
+  topics.forEach(t=>{
+    const opt = document.createElement('option');
+    opt.value = t; opt.textContent = t;
+    sel.appendChild(opt);
+  });
+  // restaura índice do tópico salvo
+  const first = topics[0] || '';
+  sel.value = first;
+  renderVocabWord(first);
+}
+
+function getVIndex(topic){
+  const n = (state.progress.vocabIndexByTopic[topic] ?? 0);
+  const arr = state.data.vocab[topic] || [];
+  return Math.min(Math.max(n,0), Math.max(0, arr.length-1));
+}
+
+function setVIndex(topic, idx){
+  state.progress.vocabIndexByTopic[topic] = idx;
+  saveProgress();
+}
+
+function renderVocabWord(topic){
+  const arr = state.data.vocab[topic] || [];
+  const idx = getVIndex(topic);
+  const item = arr[idx] || {pt:'(sem itens)', en:'(update /data/vocabulario.json)'};
+  document.getElementById('vPt').textContent = item.pt;
+  document.getElementById('vEn').textContent = item.en;
+  document.getElementById('vIdx').textContent = arr.length ? `${idx+1} / ${arr.length}` : '0 / 0';
+}
+
+/* =========================================================
+   Eventos
+   ========================================================= */
+document.getElementById('ckShowPt').addEventListener('change', (e)=>{
+  state.showPt = e.target.checked;
+  renderQA();
+});
+
+document.getElementsByName('level').forEach(r=>{
+  r.addEventListener('change', (e)=>{
+    state.level = e.target.value;
+    state.progress.lastLevel = state.level;
+    saveProgress();
+    pickNext();
+  });
+});
+
+document.getElementById('btnPlayQ').addEventListener('click', ()=>{ if(state.current) speakEn(state.current.en_q); });
+document.getElementById('btnPlayA').addEventListener('click', ()=>{ if(state.current) speakEn(state.current.en_a); });
+
+document.getElementById('btnCheck').addEventListener('click', ()=>{
+  const val = document.getElementById('txtAnswer').value;
+  if(!val.trim()){
+    const fb = document.getElementById('feedbackMsg');
+    fb.style.color = '#f59e0b'; fb.textContent = 'Digite algo ou use o microfone.';
+    return;
+  }
+  verifyAnswer(val);
+});
+
+document.getElementById('btnNext').addEventListener('click', pickNext);
+
+document.getElementById('btnRec').addEventListener('click', ()=>{
+  if(!rec){ alert('Reconhecimento de voz não suportado neste navegador.'); return; }
+  if(recActive){ rec.stop(); recActive=false; return; }
+  recActive=true; state.transcribed='';
+  document.getElementById('heard').textContent = 'Ouvindo…';
+  rec.start();
+});
+
+document.getElementById('btnVerifyRec').addEventListener('click', ()=>{
+  if(!state.transcribed){ document.getElementById('heard').textContent='Nada foi capturado ai
