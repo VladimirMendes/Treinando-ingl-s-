@@ -5,14 +5,6 @@ let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
 const speedControl = document.getElementById("audioSpeed");
-function playAudio(text, speed = 1) {
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = speed; // velocidade (1 = normal, 0.5 = lento, 2 = rápido)
-  speechSynthesis.speak(utterance);
-}
-
-const speedControl = document.getElementById("audioSpeed");
 const speedValue = document.getElementById("speedValue");
 
 speedControl.addEventListener("select", () => {
