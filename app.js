@@ -20,7 +20,7 @@ function speakWithSpeed(text) {
   utterance.lang = 'en-US';
   utterance.rate = rate;
   speechSynthesis.speak(utterance);
-  }
+}
 
 // 🔹 Carregar arquivos JSON externos
 async function carregarDados() {
