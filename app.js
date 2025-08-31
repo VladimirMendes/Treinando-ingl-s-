@@ -7,10 +7,12 @@ let streak = parseInt(localStorage.getItem("streak")) || 0;
 const speedControl = document.getElementById("audioSpeed");
 const speedValue = document.getElementById("speedValue");
 
-speedControl.addEventListener("select", () => {
+// Atualiza o texto do valor da velocidade
+speedControl.addEventListener("input", () => {
   speedValue.textContent = speedControl.value + "x";
 });
 
+// 🔹 Fala em inglês (com velocidade ajustável)
 function playAudio(text) {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "en-US";
@@ -45,7 +47,7 @@ function mostrarFraseAleatoria(nivel) {
   document.getElementById("pergunta").innerText = frase.pergunta;
   document.getElementById("resposta").innerText = frase.resposta;
 
-  falar(frase.pergunta);
+  playAudio(frase.pergunta); // agora usa a função com velocidade
 }
 
 // 🔹 Mostrar vocabulário por tópico
@@ -58,14 +60,7 @@ function mostrarVocabulario(topico) {
   document.getElementById("palavra").innerText = item.palavra;
   document.getElementById("traducao").innerText = item.traducao;
 
-  falar(item.palavra);
-}
-
-// 🔹 Fala em inglês
-function falar(texto) {
-  const msg = new SpeechSynthesisUtterance(texto);
-  msg.lang = "en-US";
-  speechSynthesis.speak(msg);
+  playAudio(item.palavra); // idem aqui
 }
 
 // 🔹 Verificar resposta
