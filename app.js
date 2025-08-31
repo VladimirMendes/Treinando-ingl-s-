@@ -5,20 +5,21 @@ let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
 const speedControl = document.getElementById("audioSpeed");
+const utterance = new SpeechSynthesisUtterance(text);
+utterance.lang = 'en-US';
+
+// pega o valor do controle de velocidade
+const speed = parseFloat(document.getElementById("audioSpeed").value);
+utterance.rate = speed; // aplica no áudio
+
+speechSynthesis.speak(utterance);
+
+const speedControl = document.getElementById("audioSpeed");
 const speedValue = document.getElementById("speedValue");
 
-// Atualiza o texto do valor da velocidade
 speedControl.addEventListener("input", () => {
   speedValue.textContent = speedControl.value + "x";
 });
-
-// 🔹 Fala em inglês (com velocidade ajustável)
-function playAudio(text) {
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = parseFloat(speedControl.value); // pega do slider
-  speechSynthesis.speak(utterance);
-}
 
 // 🔹 Carregar arquivos JSON externos
 async function carregarDados() {
