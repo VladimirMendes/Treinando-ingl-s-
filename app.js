@@ -59,9 +59,6 @@ function mostrarFraseAleatoria(nivel) {
   document.getElementById("resposta").innerText = frase.resposta;
 
   speakTextEn(frase.pergunta); // ✅ já respeita velocidade global
-  document.getElementById('speedControl').addEventListener('input', (e)=>{
-  document.getElementById('speedVal').textContent = e.target.value + 'x';
-});
 }
 
 // 🔹 Mostrar vocabulário por tópico
@@ -75,9 +72,7 @@ function mostrarVocabulario(topico) {
   document.getElementById("traducao").innerText = item.traducao;
 
   speakTextEn(item.palavra); // ✅ item aqui
-  document.getElementById('speedControl').addEventListener('input', (e)=>{
-  document.getElementById('speedVal').textContent = e.target.value + 'x';
-});
+  
 }
 
 // 🔹 Verificar resposta
