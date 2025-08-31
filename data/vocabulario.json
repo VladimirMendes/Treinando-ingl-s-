@@ -1,0 +1,22 @@
+{
+  "Saudações": [
+    {"pt": "Olá", "en": "Hello"},
+    {"pt": "Bom dia", "en": "Good morning"},
+    {"pt": "Boa noite", "en": "Good night"}
+  ],
+  "Comida": [
+    {"pt": "Maçã", "en": "Apple"},
+    {"pt": "Pão", "en": "Bread"},
+    {"pt": "Água", "en": "Water"}
+  ],
+  "Viagem ✈️": [
+    {"pt": "Aeroporto", "en": "Airport"},
+    {"pt": "Passaporte", "en": "Passport"},
+    {"pt": "Embarque", "en": "Boarding"}
+  ],
+  "Almoxarifado": [
+    {"pt": "Estoque", "en": "Inventory"},
+    {"pt": "Caixa", "en": "Box"},
+    {"pt": "Etiqueta", "en": "Label"}
+  ]
+}
