@@ -4,29 +4,23 @@ let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
-let utterance; // variável global para o controle
+<label for="speed">Velocidade:</label>
+<input type="range" id="speed" min="0.5" max="1.5" step="0.1" value="1">
+<span id="speedValue">1.0x</span>
+const speedControl = document.getElementById('speed');
+const speedValue = document.getElementById('speedValue');
 
-function falar(texto, velocidade = 1) {
-  if (speechSynthesis.speaking) {
-    speechSynthesis.cancel(); // cancela fala anterior
-  }
-  utterance = new SpeechSynthesisUtterance(texto);
-  utterance.lang = "en-US";
-  utterance.rate = velocidade; // velocidade: 0.1 a 10 (normal = 1)
+speedControl.addEventListener('input', () => {
+  speedValue.textContent = speedControl.value + 'x';
+});
+
+function speakWithSpeed(text) {
+  const rate = parseFloat(speedControl.value);
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = rate;
   speechSynthesis.speak(utterance);
-}
-// Botões de controle
-document.getElementById("playAudio").onclick = () => {
-  if (utterance) speechSynthesis.speak(utterance);
-};
-// Slider para ajustar velocidade
-document.getElementById("velocidadeAudio").oninput = (e) => {
-  const novaVelocidade = parseFloat(e.target.value);
-  if (utterance) {
-    speechSynthesis.cancel();
-    falar(utterance.text, novaVelocidade);
   }
-};
 
 // 🔹 Carregar arquivos JSON externos
 async function carregarDados() {
