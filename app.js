@@ -15,9 +15,16 @@ function playAudio(text, speed = 1) {
 const speedControl = document.getElementById("audioSpeed");
 const speedValue = document.getElementById("speedValue");
 
-speedControl.addEventListener("input", () => {
+speedControl.addEventListener("select", () => {
   speedValue.textContent = speedControl.value + "x";
 });
+
+function playAudio(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  utterance.rate = parseFloat(speedControl.value); // pega do slider
+  speechSynthesis.speak(utterance);
+}
 
 // 🔹 Carregar arquivos JSON externos
 async function carregarDados() {
