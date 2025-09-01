@@ -50,7 +50,7 @@
     <span class="badge">📦 Almoxarifado + Conversação</span>
     <h1>English Dialogue Trainer – Web</h1>
   </div>
-  <p class="sub">Perguntas e respostas aparecem em <b>inglês</b> com <b>tradução em português</b> (dependendo do nível). Voz: texto ↔ fala + fala ↔ texto no navegador.</p>
+  <p class="sub">Perguntas e respostas aparecem em <b>inglês</b> com <b>tradução em português</b> (dependendo do nível). Voz: texto → fala e fala → texto (quando suportado).</p>
 
   <!-- Config -->
   <div class="card">
@@ -59,17 +59,20 @@
       <label><input type="radio" name="level" value="Fácil" checked> Fácil</label>
       <label><input type="radio" name="level" value="Médio"> Médio</label>
       <label><input type="radio" name="level" value="Difícil"> Difícil</label>
-      <label style="margin-left:12px"><input type="checkbox" id="ckShowPt"> Mostrar tradução (Médio)</label>
+      <label style="margin-left:12px"><input type="checkbox" id="ckShowPt"> Mostrar tradução (Médio / Difícil)</label>
     </div>
     <div class="kpi" style="margin-top:8px">
       <div class="item">Pontuação: <b id="kpiScore">0</b></div>
       <div class="item">🔥 Streak: <b id="kpiStreak">0</b></div>
     </div>
+
+    <!-- Controle de velocidade global -->
+    <div style="margin-top:12px">
+      <label for="globalSpeed" style="margin-right:8px">Velocidade do áudio:</label>
+      <input id="globalSpeed" type="range" min="0.5" max="2" step="0.1" value="1">
+      <span id="globalSpeedValue">1x</span>
+    </div>
   </div>
-  <!-- Controle de velocidade -->
-  <label for="audioSpeed">Velocidade do áudio:</label>
-  <input id="audioSpeed" type="range" min="0.5" max="2" step="0.1" value="1">
-  <span id="speedValue">1x</span>
 
   <div class="row" style="margin-top:16px">
     <!-- Treino de frases -->
@@ -157,43 +160,41 @@
 
 <script>
 /* =========================================================
-   CONFIG: caminhos dos “bancos de dados” (JSON no repositório)
+   Config / Estado
    ========================================================= */
 const DATA = {
-  frasesURL: 'data/frases.json',        // array por nível: { "Fácil":[{en_q, pt_q, en_a, pt_a}], "Médio":[...], "Difícil":[...] }
+  frasesURL: 'data/frases.json',        // { "Fácil":[{en_q,pt_q,en_a,pt_a},...], "Médio":[...], "Difícil":[...] }
   vocabURL: 'data/vocabulario.json'     // { "Tópico":[{"pt":"Olá","en":"Hello"}, ...], ... }
 };
 
-/* =========================================================
-   Estado + Persistência (localStorage)
-   ========================================================= */
 const LS_KEY = 'trainer_progress_v2';
+const LS_SPEED = 'trainer_tts_speed';
+
 function loadProgress(){
-  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {
-    score:0, streak:0, history:[], difficult:{}, // difficult usa chave pelo inglês da resposta
-    lastLevel:'Fácil',
-    vocabIndexByTopic:{}
-  }; } catch(e){ return {score:0,streak:0,history:[],difficult:{},lastLevel:'Fácil',vocabIndexByTopic:{}}; }
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY)) || {
+      score:0, streak:0, history:[], difficult:{}, lastLevel:'Fácil', vocabIndexByTopic:{}
+    };
+  } catch(e){
+    return {score:0, streak:0, history:[], difficult:{}, lastLevel:'Fácil', vocabIndexByTopic:{}};
+  }
 }
 function saveProgress(){ localStorage.setItem(LS_KEY, JSON.stringify(state.progress)); }
 
+/* global app state */
 const state = {
   data:{ frases:{Fácil:[],Médio:[],Difícil:[]}, vocab:{} },
   level:'Fácil',
   showPt:false,
-  current:null,         // objeto da frase atual
-  transcribed:'',       // último texto reconhecido por voz
-  progress:loadProgress()
+  current:null,
+  transcribed:'',
+  progress: loadProgress()
 };
 
 /* =========================================================
-   Utilidades de texto / similaridade
+   Utilitários de comparação
    ========================================================= */
-function normalize(s){ return (s||'').toLowerCase()
-  .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-  .replace(/[^a-z0-9' ]+/g,' ').replace(/\s+/g,' ').trim(); }
-
-// Levenshtein ratio
+function normalize(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9' ]+/g,' ').replace(/\s+/g,' ').trim(); }
 function levRatio(a,b){
   a = normalize(a); b = normalize(b);
   const m=a.length, n=b.length;
@@ -210,7 +211,6 @@ function levRatio(a,b){
   const dist = dp[m][n];
   return 1 - dist / Math.max(m,n);
 }
-
 function classify(user, correct){
   const r = levRatio(user, correct);
   if(r >= 0.99) return {status:'success', msg:'✅ Correto!', inc:1, sim:r};
@@ -221,91 +221,108 @@ function classify(user, correct){
 }
 
 /* =========================================================
-   TTS – Web Speech API (texto → fala)
+   TTS – controle de velocidade global
    ========================================================= */
+let speechRate = parseFloat(localStorage.getItem(LS_SPEED)) || 1.0;
+const rateInput = document.getElementById('globalSpeed');
+const rateLabel = document.getElementById('globalSpeedValue');
+
+function updateRate(){
+  speechRate = parseFloat(rateInput.value) || 1.0;
+  rateLabel.textContent = speechRate.toFixed(1) + 'x';
+  localStorage.setItem(LS_SPEED, speechRate);
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+}
+if(rateInput){
+  rateInput.value = speechRate;
+  rateInput.addEventListener('input', updateRate);
+  updateRate();
+}
+
 function speakEn(text){
+  if(!text) return;
   if(!('speechSynthesis' in window)) { alert('TTS não suportado neste navegador.'); return; }
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-US';
-  u.rate = 1; u.pitch = 1;
-  // tenta escolher uma voz inglesa se existir
+  u.rate = speechRate;
+  u.pitch = 1;
   const vs = speechSynthesis.getVoices();
   const pref = vs.find(v=>/en(-|_)?(US|GB|AU|CA|IN)?/i.test(v.lang)) || vs[0];
   if(pref) u.voice = pref;
-  speechSynthesis.cancel(); // evita sobreposição
-  speechSynthesis.speak(u);
+  speechSynthesis.cancel();
+  // If voices not ready, wait for onvoiceschanged
+  if(speechSynthesis.getVoices().length === 0){
+    speechSynthesis.onvoiceschanged = ()=>{ speechSynthesis.speak(u); };
+    setTimeout(()=>{ if(!speechSynthesis.speaking) speechSynthesis.speak(u); }, 120);
+  }else{
+    speechSynthesis.speak(u);
+  }
 }
 
 /* =========================================================
-   STT – Web Speech API (fala → texto) (Chrome-like)
+   STT – reconhecimento de voz (quando disponível)
    ========================================================= */
-let rec=null, recActive=false;
+let rec = null, recActive = false;
 function initRecognizer(){
   const R = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!R){
-    document.getElementById('recSupport').textContent = 'Reconhecimento de voz não suportado neste navegador (recomendado Chrome).';
+    document.getElementById('recSupport').textContent = 'Reconhecimento de voz não suportado (use Chrome/Edge).';
     return;
   }
   rec = new R();
   rec.lang = 'en-US';
   rec.interimResults = false;
   rec.maxAlternatives = 1;
-  rec.onresult = (e)=>{
+  rec.onresult = (e) => {
     const t = e.results[0][0].transcript;
     state.transcribed = t;
     document.getElementById('heard').textContent = `Você disse: “${t}”`;
   };
-  rec.onerror = (e)=>{ document.getElementById('heard').textContent = `Erro no reconhecimento: ${e.error}`; };
-  rec.onend = ()=>{ recActive=false; document.getElementById('btnRec').textContent='🎤 Gravar / Parar'; };
-  document.getElementById('recSupport').textContent = 'Dica: Fale pausadamente. O idioma de reconhecimento está em inglês (en-US).';
+  rec.onerror = (e) => { document.getElementById('heard').textContent = `Erro: ${e.error}`; };
+  rec.onend = () => { recActive = false; document.getElementById('btnRec').textContent = '🎤 Gravar / Parar'; };
+  document.getElementById('recSupport').textContent = 'Dica: fale pausadamente (idioma en-US).';
 }
 
 /* =========================================================
-   Carregamento dos bancos (JSON externos)
+   Carregar dados (frases e vocabulário)
    ========================================================= */
 async function loadData(){
   try{
-    const [fr, vb] = await Promise.all([
-      fetch(DATA.frasesURL).then(r=>r.json()),
-      fetch(DATA.vocabURL).then(r=>r.json())
+    const [frRes, vbRes] = await Promise.all([
+      fetch(DATA.frasesURL), fetch(DATA.vocabURL)
     ]);
-    // Normaliza estrutura esperada
-    state.data.frases.Fácil   = Array.isArray(fr['Fácil'])   ? fr['Fácil']   : [];
-    state.data.frases.Médio   = Array.isArray(fr['Médio'])   ? fr['Médio']   : [];
+    const fr = await frRes.json();
+    const vb = await vbRes.json();
+    state.data.frases.Fácil = Array.isArray(fr['Fácil']) ? fr['Fácil'] : [];
+    state.data.frases.Médio = Array.isArray(fr['Médio']) ? fr['Médio'] : [];
     state.data.frases.Difícil = Array.isArray(fr['Difícil']) ? fr['Difícil'] : [];
     state.data.vocab = vb || {};
   }catch(e){
-    alert('Falha ao carregar os bancos (frases/vocabulário). Verifique /data/*.json');
+    alert('Falha ao carregar /data/frases.json ou /data/vocabulario.json. Verifique o caminho e formato.');
     console.error(e);
   }
 }
 
 /* =========================================================
-   Seleção e reforço de frases
+   Seleção e renderização das frases (sem autoplay)
    ========================================================= */
-function getPool(level){
-  // Cada item: { en_q, pt_q, en_a, pt_a }
-  return state.data.frases[level] || [];
-}
+function getPool(level){ return state.data.frases[level] || []; }
 
 function pickNext(){
   const pool = getPool(state.level);
-  if(!pool.length){ state.current=null; renderQA(); return; }
+  if(!pool.length){ state.current = null; renderQA(); return; }
 
-  // 30% de chance de reforçar algo difícil, se existir no nível atual
+  // reforço: 30% chance de escolher algo da lista de difíceis
   const keys = Object.keys(state.progress.difficult || {});
   const hardForLevel = pool.filter(p => keys.includes(p.en_a));
   if(hardForLevel.length && Math.random() < 0.30){
     state.current = hardForLevel[Math.floor(Math.random()*hardForLevel.length)];
-  }else{
+  } else {
     state.current = pool[Math.floor(Math.random()*pool.length)];
   }
   renderQA(true);
 }
 
-/* =========================================================
-   Renderização da UI de frases
-   ========================================================= */
 function renderQA(resetInput=false){
   const qEn = document.getElementById('questionEn');
   const qPt = document.getElementById('questionPt');
@@ -313,26 +330,33 @@ function renderQA(resetInput=false){
   const aEn = document.getElementById('answerEn');
   const aPt = document.getElementById('answerPt');
   const fb = document.getElementById('feedbackMsg');
-state
+
   if(!state.current){
     qEn.textContent = 'Sem frases neste nível. Atualize /data/frases.json.';
-    qPtRow.style.display='none'; aEn.textContent=''; aPt.textContent=''; return;
+    qPt.textContent = ''; aEn.textContent = ''; aPt.textContent = '';
+    qPtRow.style.display = 'none';
+    return;
   }
 
   qEn.textContent = state.current.en_q;
   qPt.textContent = state.current.pt_q || '';
   aEn.textContent = state.current.en_a;
   aPt.textContent = state.current.pt_a || '';
-  qPtRow.style.display = (state.level==='Fácil' || (state.level==='Médio' && state.showPt) || (state.level==='Difícil' && state.showPt)) ? 'block' : 'none';
+
+  // Mostrar PT se Fácil OR se usuário marcou mostrar (Médio/Difícil)
+  qPtRow.style.display = (state.level === 'Fácil' || state.showPt) ? 'block' : 'none';
 
   if(resetInput){
     document.getElementById('txtAnswer').value = '';
     document.getElementById('heard').textContent = '';
     state.transcribed = '';
-    fb.textContent='';
+    fb.textContent = '';
   }
 }
 
+/* =========================================================
+   KPIs / Histórico / Difíceis
+   ========================================================= */
 function renderKPIs(){
   document.getElementById('kpiScore').textContent = state.progress.score;
   document.getElementById('kpiStreak').textContent = state.progress.streak;
@@ -357,12 +381,12 @@ function addHistoryRow(entry){
     <td>${entry.result}</td>
     <td>${entry.similarity}</td>
   `;
-  tbody.prepend(tr); // mais recente em cima
+  tbody.prepend(tr);
 }
 
 function renderDifficult(){
   const div = document.getElementById('hardList');
-  const entries = Object.entries(state.progress.difficult).sort((a,b)=>b[1]-a[1]);
+  const entries = Object.entries(state.progress.difficult || {}).sort((a,b)=>b[1]-a[1]);
   if(!entries.length){ div.textContent='Nenhuma por enquanto 🚀'; return; }
   div.innerHTML = entries.map(([k,v])=>`• ${k} <span class="muted">(erros: ${v})</span>`).join('<br/>');
 }
@@ -371,7 +395,7 @@ function renderDifficult(){
    Verificação de respostas
    ========================================================= */
 function verifyAnswer(userText){
-  if(!state.current){ return; }
+  if(!state.current) return;
   const correct = state.current.en_a;
   const res = classify(userText, correct);
 
@@ -385,40 +409,36 @@ function verifyAnswer(userText){
   };
   addHistoryRow(entry);
 
-  // score + streak
   state.progress.score += res.inc;
-  state.progress.streak = res.inc ? (state.progress.streak+1) : 0;
+  state.progress.streak = res.inc ? (state.progress.streak + 1) : 0;
   renderKPIs();
 
-  // difíceis
-  if(res.status!=='success'){
-    state.progress.difficult[correct] = (state.progress.difficult[correct]||0)+1;
+  if(res.status !== 'success'){
+    state.progress.difficult[correct] = (state.progress.difficult[correct] || 0) + 1;
   }
   saveProgress();
 
-  // feedback visual
   const fb = document.getElementById('feedbackMsg');
-  fb.style.color = res.status==='success' ? '#22c55e' :
-                   res.status==='info'    ? '#93c5fd' :
-                   res.status==='warn'    ? '#f59e0b' : '#ef4444';
+  fb.style.color = res.status === 'success' ? '#22c55e' :
+                   res.status === 'info'    ? '#93c5fd' :
+                   res.status === 'warn'    ? '#f59e0b' : '#ef4444';
   fb.textContent = res.msg;
 }
 
 /* =========================================================
-   Vocabulário: 1 por vez, com áudio
+   Vocabulário 1 por vez
    ========================================================= */
 function initVocab(){
   const sel = document.getElementById('selTopic');
   sel.innerHTML = '';
-  const topics = Object.keys(state.data.vocab);
+  const topics = Object.keys(state.data.vocab || {});
   topics.forEach(t=>{
     const opt = document.createElement('option');
     opt.value = t; opt.textContent = t;
     sel.appendChild(opt);
   });
-  // restaura índice do tópico salvo
   const first = topics[0] || '';
-  sel.value = first;
+  if(first) sel.value = first;
   renderVocabWord(first);
 }
 
@@ -443,14 +463,14 @@ function renderVocabWord(topic){
 }
 
 /* =========================================================
-   Eventos
+   Eventos UI
    ========================================================= */
 document.getElementById('ckShowPt').addEventListener('change', (e)=>{
-  state.showPt = e.target.checked;
+  state.showPt = !!e.target.checked;
   renderQA();
 });
 
-document.getElementsByName('level').forEach(r=>{
+document.querySelectorAll('input[name="level"]').forEach(r=>{
   r.addEventListener('change', (e)=>{
     state.level = e.target.value;
     state.progress.lastLevel = state.level;
@@ -475,9 +495,17 @@ document.getElementById('btnCheck').addEventListener('click', ()=>{
 document.getElementById('btnNext').addEventListener('click', pickNext);
 
 document.getElementById('btnRec').addEventListener('click', ()=>{
-  if(!rec){ alert('Reconhecimento de voz não suportado neste navegador.'); return; }
-  if(recActive){ rec.stop(); recActive=false; return; }
-  recActive=true; state.transcribed='';
+  if(!rec){
+    alert('Reconhecimento de voz não suportado neste navegador.');
+    return;
+  }
+  if(recActive){
+    rec.stop();
+    recActive = false;
+    return;
+  }
+  recActive = true;
+  state.transcribed = '';
   document.getElementById('heard').textContent = 'Ouvindo…';
   rec.start();
 });
@@ -487,9 +515,7 @@ document.getElementById('btnVerifyRec').addEventListener('click', ()=>{
   verifyAnswer(state.transcribed);
 });
 
-document.getElementById('selTopic').addEventListener('change', (e)=>{
-  renderVocabWord(e.target.value);
-});
+document.getElementById('selTopic').addEventListener('change', (e)=>{ renderVocabWord(e.target.value); });
 
 document.getElementById('btnPlayV').addEventListener('click', ()=>{
   const topic = document.getElementById('selTopic').value;
@@ -515,32 +541,27 @@ document.getElementById('btnNextV').addEventListener('click', ()=>{
 });
 
 /* =========================================================
-   Inicialização
+   Inicialização principal
    ========================================================= */
 (async function main(){
-  // carrega dados e inicializa
   await loadData();
 
   // restaura nível
   state.level = state.progress.lastLevel || 'Fácil';
-  document.querySelectorAll('input[name="level"]').forEach(r=>{
-    r.checked = (r.value === state.level);
-  });
+  document.querySelectorAll('input[name="level"]').forEach(r=>{ r.checked = (r.value === state.level); });
 
-  // preparar TTS voices (alguns browsers carregam async)
-  if('speechSynthesis' in window){
-    speechSynthesis.onvoiceschanged = ()=>{}; // trigger warm
-  }
+  // preparar TTS voices
+  if('speechSynthesis' in window){ speechSynthesis.getVoices(); }
 
   initRecognizer();
   renderKPIs();
 
-  // histórico
-  if(state.progress.history.length){
-    document.getElementById('histEmpty').style.display='none';
-    document.getElementById('histTableWrap').style.display='block';
+  // histórico existente para render
+  if(state.progress.history && state.progress.history.length){
+    document.getElementById('histEmpty').style.display = 'none';
+    document.getElementById('histTableWrap').style.display = 'block';
     const tbody = document.querySelector('#histTable tbody');
-    [...state.progress.history].reverse().forEach(h=>{ // mostra mais antigos primeiro; novos irão no topo
+    state.progress.history.forEach(h=>{
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${h.level}</td>
@@ -553,35 +574,17 @@ document.getElementById('btnNextV').addEventListener('click', ()=>{
       tbody.appendChild(tr);
     });
   }
+
   renderDifficult();
 
-  // inicia uma frase
+  // inicia frase e vocabulário (sem autoplay)
   pickNext();
-
-  // vocabulário
   initVocab();
 
-  // quando verificar/avançar, atualiza lista de difíceis
+  // observe historic table changes to update difficult list
   const observer = new MutationObserver(()=> renderDifficult());
   observer.observe(document.getElementById('histTable'), {childList:true, subtree:true});
 })();
-let audioSpeed = 1; // valor inicial
-
-// Atualiza a velocidade quando o usuário mexe no controle
-const speedControl = document.getElementById("audioSpeed");
-const speedValue = document.getElementById("speedValue");
-
-speedControl.addEventListener("input", () => {
-  audioSpeed = parseFloat(speedControl.value);
-  speedValue.textContent = audioSpeed.toFixed(1) + "x";
-});
-
-// Função global para tocar áudio com a velocidade escolhida
-function playAudio(url) {
-  const audio = new Audio(url);
-  audio.playbackRate = audioSpeed; // aplica a velocidade global ANTES de tocar
-  audio.play();
-} 
 </script>
 </body>
 </html>
