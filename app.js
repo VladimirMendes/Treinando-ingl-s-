@@ -12,13 +12,12 @@ const rateLabel  = document.getElementById('globalSpeedValue');
 function updateRate(){
   speechRate = parseFloat(rateInput?.value || 1);
   if (rateLabel) rateLabel.textContent = speechRate.toFixed(1) + 'x';
-  // cancela fala atual para a nova velocidade valer no próximo play
   if ('speechSynthesis' in window) speechSynthesis.cancel();
 }
 
 if (rateInput) {
   rateInput.addEventListener('input', updateRate);
-  updateRate(); // inicializa label e variável
+  updateRate();
 }
 
 /* ======== TTS com voz e velocidade (robusto) ======== */
@@ -31,21 +30,19 @@ function speakEn(text){
 
   const u = new SpeechSynthesisUtterance(text);
   u.lang  = 'en-US';
-  u.rate  = speechRate;  // << aplica a velocidade escolhida
+  u.rate  = speechRate;
   u.pitch = 1;
 
   const speakNow = () => {
     const voices = speechSynthesis.getVoices();
     const voice  = voices.find(v => /^en(-|_)/i.test(v.lang)) || voices[0];
     if (voice) u.voice = voice;
-    speechSynthesis.cancel(); // evita sobreposição
+    speechSynthesis.cancel();
     speechSynthesis.speak(u);
   };
 
-  // Em alguns navegadores as vozes carregam depois
   if (speechSynthesis.getVoices().length === 0) {
     speechSynthesis.onvoiceschanged = speakNow;
-    // fallback para garantir a execução
     setTimeout(speakNow, 100);
   } else {
     speakNow();
@@ -55,7 +52,7 @@ function speakEn(text){
 /* ======== Botão para repetir a pergunta em inglês ======== */
 document.getElementById("btnPlayQ").addEventListener("click", () => {
   const text = document.getElementById("questionEn").innerText;
-  speakEn(text); // corrigido para usar speakEn
+  speakEn(text);
 });
 
 /* ======== Carregar arquivos JSON externos ======== */
@@ -68,8 +65,8 @@ async function carregarDados() {
     vocabulario = await resVocab.json();
 
     console.log("✅ Dados carregados com sucesso!");
-    mostrarFraseAleatoria("facil"); // inicia com fácil
-    mostrarVocabulario("animais");  // inicia com um tópico
+    mostrarFraseAleatoria("facil");
+    mostrarVocabulario("animais");
   } catch (error) {
     console.error("Erro ao carregar dados:", error);
   }
@@ -85,7 +82,7 @@ function mostrarFraseAleatoria(nivel) {
   document.getElementById("pergunta").innerText = frase.pergunta;
   document.getElementById("resposta").innerText = frase.resposta;
 
-  speakEn(frase.pergunta); // ✅ já respeita velocidade global
+  speakEn(frase.pergunta);
 }
 
 /* ======== Mostrar vocabulário por tópico ======== */
@@ -98,7 +95,7 @@ function mostrarVocabulario(topico) {
   document.getElementById("palavra").innerText = item.palavra;
   document.getElementById("traducao").innerText = item.traducao;
 
-  speakEn(item.palavra); // ✅ idem aqui
+  speakEn(item.palavra);
 }
 
 /* ======== Verificar resposta ======== */
@@ -129,5 +126,33 @@ function salvarProgresso() {
   localStorage.setItem("streak", streak);
 }
 
+/* ======== Limpar histórico e palavras difíceis ======== */
+function limparProgresso() {
+  if (!confirm("Tem certeza que deseja limpar o histórico e as palavras de reforço?")) return;
+
+  historico = [];
+  palavrasDificeis = [];
+  streak = 0;
+
+  salvarProgresso();
+
+  // Atualizar interface
+  document.getElementById("feedback").innerText = "";
+  document.getElementById("pergunta").innerText = "";
+  document.getElementById("resposta").innerText = "";
+  document.getElementById("palavra").innerText = "";
+  document.getElementById("traducao").innerText = "";
+
+  alert("✅ Histórico e palavras de reforço limpos!");
+}
+
 /* ======== Inicializar app ======== */
-window.onload = carregarDados;
+window.onload = () => {
+  carregarDados();
+
+  // ativar botão de limpar histórico, se existir
+  const btnClear = document.getElementById("btnClearHistory");
+  if (btnClear) {
+    btnClear.addEventListener("click", limparProgresso);
+  }
+};
