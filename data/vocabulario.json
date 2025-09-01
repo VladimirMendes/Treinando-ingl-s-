@@ -1,22 +1,86 @@
 {
-  "Saudações": [
-    {"pt": "Olá", "en": "Hello"},
-    {"pt": "Bom dia", "en": "Good morning"},
-    {"pt": "Boa noite", "en": "Good night"}
-  ],
-  "Comida": [
-    {"pt": "Maçã", "en": "Apple"},
-    {"pt": "Pão", "en": "Bread"},
-    {"pt": "Água", "en": "Water"}
-  ],
   "Viagem ✈️": [
-    {"pt": "Aeroporto", "en": "Airport"},
-    {"pt": "Passaporte", "en": "Passport"},
-    {"pt": "Embarque", "en": "Boarding"}
+    {"en": "Airport", "pt": "Aeroporto", "en_ex": "We arrived at the airport early.", "pt_ex": "Nós chegamos cedo ao aeroporto.", "topic": "Viagem"},
+    {"en": "Passport", "pt": "Passaporte", "en_ex": "Don’t forget your passport!", "pt_ex": "Não esqueça seu passaporte!", "topic": "Viagem"},
+    {"en": "Ticket", "pt": "Bilhete / Passagem", "en_ex": "I bought a ticket to London.", "pt_ex": "Eu comprei uma passagem para Londres.", "topic": "Viagem"},
+    {"en": "Luggage", "pt": "Bagagem", "en_ex": "My luggage is very heavy.", "pt_ex": "Minha bagagem está muito pesada.", "topic": "Viagem"},
+    {"en": "Hotel", "pt": "Hotel", "en_ex": "We booked a hotel near the beach.", "pt_ex": "Nós reservamos um hotel perto da praia.", "topic": "Viagem"},
+    {"en": "Map", "pt": "Mapa", "en_ex": "Can you give me a map of the city?", "pt_ex": "Você pode me dar um mapa da cidade?", "topic": "Viagem"},
+    {"en": "Tour", "pt": "Passeio / Excursão", "en_ex": "We joined a city tour yesterday.", "pt_ex": "Nós participamos de um passeio pela cidade ontem.", "topic": "Viagem"},
+    {"en": "Reservation", "pt": "Reserva", "en_ex": "Do you have a reservation?", "pt_ex": "Você tem uma reserva?", "topic": "Viagem"},
+    {"en": "Flight", "pt": "Voo", "en_ex": "Our flight was delayed.", "pt_ex": "Nosso voo foi atrasado.", "topic": "Viagem"},
+    {"en": "Guide", "pt": "Guia", "en_ex": "The guide explained the history of the castle.", "pt_ex": "O guia explicou a história do castelo.", "topic": "Viagem"}
   ],
-  "Almoxarifado": [
-    {"pt": "Estoque", "en": "Inventory"},
-    {"pt": "Caixa", "en": "Box"},
-    {"pt": "Etiqueta", "en": "Label"}
+  "Negócios 💼": [
+    {"en": "Meeting", "pt": "Reunião", "en_ex": "The meeting starts at 10 a.m.", "pt_ex": "A reunião começa às 10 da manhã.", "topic": "Negócios"},
+    {"en": "Contract", "pt": "Contrato", "en_ex": "I signed the contract yesterday.", "pt_ex": "Eu assinei o contrato ontem.", "topic": "Negócios"},
+    {"en": "Salary", "pt": "Salário", "en_ex": "He receives a good salary.", "pt_ex": "Ele recebe um bom salário.", "topic": "Negócios"},
+    {"en": "Boss", "pt": "Chefe", "en_ex": "My boss is very strict.", "pt_ex": "Meu chefe é muito rigoroso.", "topic": "Negócios"},
+    {"en": "Client", "pt": "Cliente", "en_ex": "We have a new client from Spain.", "pt_ex": "Temos um novo cliente da Espanha.", "topic": "Negócios"},
+    {"en": "Deadline", "pt": "Prazo final", "en_ex": "The deadline is next Monday.", "pt_ex": "O prazo final é na próxima segunda-feira.", "topic": "Negócios"},
+    {"en": "Office", "pt": "Escritório", "en_ex": "I work in a big office downtown.", "pt_ex": "Eu trabalho em um grande escritório no centro.", "topic": "Negócios"},
+    {"en": "Project", "pt": "Projeto", "en_ex": "This project is very important.", "pt_ex": "Este projeto é muito importante.", "topic": "Negócios"},
+    {"en": "Report", "pt": "Relatório", "en_ex": "She finished the report last night.", "pt_ex": "Ela terminou o relatório ontem à noite.", "topic": "Negócios"},
+    {"en": "Conference", "pt": "Conferência", "en_ex": "I will attend a conference in New York.", "pt_ex": "Eu vou participar de uma conferência em Nova York.", "topic": "Negócios"}
+  ],
+  "Comida 🍔": [
+    {"en": "Bread", "pt": "Pão", "en_ex": "I eat bread every morning.", "pt_ex": "Eu como pão todas as manhãs.", "topic": "Comida"},
+    {"en": "Cheese", "pt": "Queijo", "en_ex": "This pizza has a lot of cheese.", "pt_ex": "Esta pizza tem muito queijo.", "topic": "Comida"},
+    {"en": "Meat", "pt": "Carne", "en_ex": "Do you eat meat?", "pt_ex": "Você come carne?", "topic": "Comida"},
+    {"en": "Fish", "pt": "Peixe", "en_ex": "We had fish for dinner.", "pt_ex": "Nós comemos peixe no jantar.", "topic": "Comida"},
+    {"en": "Rice", "pt": "Arroz", "en_ex": "Rice is common in many countries.", "pt_ex": "Arroz é comum em muitos países.", "topic": "Comida"},
+    {"en": "Fruit", "pt": "Fruta", "en_ex": "I like fresh fruit.", "pt_ex": "Eu gosto de fruta fresca.", "topic": "Comida"},
+    {"en": "Vegetables", "pt": "Vegetais", "en_ex": "Eat more vegetables for your health.", "pt_ex": "Coma mais vegetais para sua saúde.", "topic": "Comida"},
+    {"en": "Soup", "pt": "Sopa", "en_ex": "She made chicken soup.", "pt_ex": "Ela fez sopa de frango.", "topic": "Comida"},
+    {"en": "Juice", "pt": "Suco", "en_ex": "Would you like some orange juice?", "pt_ex": "Você gostaria de um pouco de suco de laranja?", "topic": "Comida"},
+    {"en": "Dessert", "pt": "Sobremesa", "en_ex": "Chocolate cake is my favorite dessert.", "pt_ex": "Bolo de chocolate é minha sobremesa favorita.", "topic": "Comida"}
+  ],
+  "Saúde 🏥": [
+    {"en": "Doctor", "pt": "Médico", "en_ex": "The doctor is very kind.", "pt_ex": "O médico é muito gentil.", "topic": "Saúde"},
+    {"en": "Nurse", "pt": "Enfermeira", "en_ex": "The nurse helped me a lot.", "pt_ex": "A enfermeira me ajudou muito.", "topic": "Saúde"},
+    {"en": "Hospital", "pt": "Hospital", "en_ex": "He is in the hospital.", "pt_ex": "Ele está no hospital.", "topic": "Saúde"},
+    {"en": "Medicine", "pt": "Remédio / Medicina", "en_ex": "Take this medicine twice a day.", "pt_ex": "Tome este remédio duas vezes ao dia.", "topic": "Saúde"},
+    {"en": "Appointment", "pt": "Consulta", "en_ex": "I have a doctor’s appointment tomorrow.", "pt_ex": "Eu tenho uma consulta médica amanhã.", "topic": "Saúde"},
+    {"en": "Pain", "pt": "Dor", "en_ex": "She feels pain in her back.", "pt_ex": "Ela sente dor nas costas.", "topic": "Saúde"},
+    {"en": "Healthy", "pt": "Saudável", "en_ex": "He eats healthy food.", "pt_ex": "Ele come comida saudável.", "topic": "Saúde"},
+    {"en": "Exercise", "pt": "Exercício", "en_ex": "Exercise is important for your body.", "pt_ex": "Exercício é importante para o seu corpo.", "topic": "Saúde"},
+    {"en": "Emergency", "pt": "Emergência", "en_ex": "Call 911 in case of emergency.", "pt_ex": "Ligue 911 em caso de emergência.", "topic": "Saúde"},
+    {"en": "Blood", "pt": "Sangue", "en_ex": "He needs a blood test.", "pt_ex": "Ele precisa de um exame de sangue.", "topic": "Saúde"}
+  ],
+  "Tecnologia 💻": [
+    {"en": "Computer", "pt": "Computador", "en_ex": "I bought a new computer.", "pt_ex": "Eu comprei um novo computador.", "topic": "Tecnologia"},
+    {"en": "Internet", "pt": "Internet", "en_ex": "The internet is very fast here.", "pt_ex": "A internet é muito rápida aqui.", "topic": "Tecnologia"},
+    {"en": "Software", "pt": "Software", "en_ex": "This software is very useful.", "pt_ex": "Este software é muito útil.", "topic": "Tecnologia"},
+    {"en": "Download", "pt": "Baixar", "en_ex": "I will download the file now.", "pt_ex": "Eu vou baixar o arquivo agora.", "topic": "Tecnologia"},
+    {"en": "Password", "pt": "Senha", "en_ex": "Never share your password.", "pt_ex": "Nunca compartilhe sua senha.", "topic": "Tecnologia"},
+    {"en": "Email", "pt": "E-mail", "en_ex": "I sent you an email.", "pt_ex": "Eu te enviei um e-mail.", "topic": "Tecnologia"},
+    {"en": "Smartphone", "pt": "Celular", "en_ex": "This smartphone is very expensive.", "pt_ex": "Este celular é muito caro.", "topic": "Tecnologia"},
+    {"en": "App", "pt": "Aplicativo", "en_ex": "I use a fitness app every day.", "pt_ex": "Eu uso um aplicativo de exercícios todos os dias.", "topic": "Tecnologia"},
+    {"en": "Website", "pt": "Site", "en_ex": "This website is very popular.", "pt_ex": "Este site é muito popular.", "topic": "Tecnologia"},
+    {"en": "Keyboard", "pt": "Teclado", "en_ex": "My keyboard is not working.", "pt_ex": "Meu teclado não está funcionando.", "topic": "Tecnologia"}
+  ],
+  "Esportes ⚽": [
+    {"en": "Soccer", "pt": "Futebol", "en_ex": "He plays soccer every weekend.", "pt_ex": "Ele joga futebol todo fim de semana.", "topic": "Esportes"},
+    {"en": "Basketball", "pt": "Basquete", "en_ex": "Basketball is very popular in the USA.", "pt_ex": "O basquete é muito popular nos EUA.", "topic": "Esportes"},
+    {"en": "Tennis", "pt": "Tênis", "en_ex": "She is learning to play tennis.", "pt_ex": "Ela está aprendendo a jogar tênis.", "topic": "Esportes"},
+    {"en": "Swimming", "pt": "Natação", "en_ex": "Swimming is good for the body.", "pt_ex": "Natação é bom para o corpo.", "topic": "Esportes"},
+    {"en": "Team", "pt": "Time / Equipe", "en_ex": "Our team won the game.", "pt_ex": "Nosso time venceu o jogo.", "topic": "Esportes"},
+    {"en": "Coach", "pt": "Treinador", "en_ex": "The coach gave good advice.", "pt_ex": "O treinador deu bons conselhos.", "topic": "Esportes"},
+    {"en": "Player", "pt": "Jogador", "en_ex": "That player is very famous.", "pt_ex": "Aquele jogador é muito famoso.", "topic": "Esportes"},
+    {"en": "Goal", "pt": "Gol / Objetivo", "en_ex": "He scored a goal in the last minute.", "pt_ex": "Ele marcou um gol no último minuto.", "topic": "Esportes"},
+    {"en": "Match", "pt": "Partida", "en_ex": "The match was very exciting.", "pt_ex": "A partida foi muito emocionante.", "topic": "Esportes"},
+    {"en": "Stadium", "pt": "Estádio", "en_ex": "The stadium was full of fans.", "pt_ex": "O estádio estava cheio de torcedores.", "topic": "Esportes"}
+  ],
+  "Vida cotidiana 🏠": [
+    {"en": "House", "pt": "Casa", "en_ex": "This is my new house.", "pt_ex": "Esta é minha nova casa.", "topic": "Vida cotidiana"},
+    {"en": "Room", "pt": "Quarto", "en_ex": "My room is very clean.", "pt_ex": "Meu quarto está muito limpo.", "topic": "Vida cotidiana"},
+    {"en": "Bed", "pt": "Cama", "en_ex": "The bed is comfortable.", "pt_ex": "A cama é confortável.", "topic": "Vida cotidiana"},
+    {"en": "Chair", "pt": "Cadeira", "en_ex": "I bought a new chair.", "pt_ex": "Eu comprei uma nova cadeira.", "topic": "Vida cotidiana"},
+    {"en": "Table", "pt": "Mesa", "en_ex": "Dinner is on the table.", "pt_ex": "O jantar está na mesa.", "topic": "Vida cotidiana"},
+    {"en": "Window", "pt": "Janela", "en_ex": "Open the window, please.", "pt_ex": "Abra a janela, por favor.", "topic": "Vida cotidiana"},
+    {"en": "Door", "pt": "Porta", "en_ex": "Close the door quietly.", "pt_ex": "Feche a porta silenciosamente.", "topic": "Vida cotidiana"},
+    {"en": "Car", "pt": "Carro", "en_ex": "My car is very fast.", "pt_ex": "Meu carro é muito rápido.", "topic": "Vida cotidiana"},
+    {"en": "Street", "pt": "Rua", "en_ex": "This street is very busy.", "pt_ex": "Esta rua é muito movimentada.", "topic": "Vida cotidiana"},
+    {"en": "Friend", "pt": "Amigo", "en_ex": "My best friend lives nearby.", "pt_ex": "Meu melhor amigo mora perto.", "topic": "Vida cotidiana"}
   ]
-}
+    }
