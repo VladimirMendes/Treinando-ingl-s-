@@ -224,23 +224,22 @@ function classify(user, correct){
 
 let audioSpeed = 1; // valor inicial
 
-  // Atualiza a velocidade quando o usuário mexe no controle
-  const speedControl = document.getElementById("audioSpeed");
-  const speedValue = document.getElementById("speedValue");
+// Atualiza a velocidade quando o usuário mexe no controle
+const speedControl = document.getElementById("audioSpeed");
+const speedValue = document.getElementById("speedValue");
 
-  speedControl.addEventListener("input", () => {
-    audioSpeed = parseFloat(speedControl.value);
-    speedValue.textContent = audioSpeed.toFixed(1) + "x";
-  });
+speedControl.addEventListener("input", () => {
+  audioSpeed = parseFloat(speedControl.value);
+  speedValue.textContent = audioSpeed.toFixed(1) + "x";
+});
 
-  // Função global para tocar áudio com a velocidade escolhida
-  function playAudio(url) {
-    const audio = new Audio(url);
-    audio.playbackRate = audioSpeed; // aplica a velocidade global ANTES de tocar
-    audio.play();
-  }
+// Função global para tocar áudio com a velocidade escolhida
+function playAudio(url) {
+  const audio = new Audio(url);
+  audio.playbackRate = audioSpeed; // aplica a velocidade global ANTES de tocar
+  audio.play();
+}
 
-  
 /* =========================================================
    TTS – Web Speech API (texto → fala)
    ========================================================= */
