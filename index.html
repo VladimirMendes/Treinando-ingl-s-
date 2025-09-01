@@ -42,6 +42,24 @@
     details{border:1px solid #334155;border-radius:12px;padding:10px}
     summary{cursor:pointer;color:#a5b4fc}
     .hint{font-size:13px;color:#93c5fd}
+      /* Estilo do botão fixo */
+    #clearHistoryBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: background 0.3s;
+    }
+    #clearHistoryBtn:hover {
+    background: #cc0000;
+    }
   </style>
 </head>
 <body>
@@ -138,6 +156,8 @@
         <p class="sub" id="vIdx"></p>
       </div>
     </div>
+    <!-- Botão para limpar histórico -->
+    <button id="clearHistoryBtn">🗑️ Limpar histórico</button>
   </div>
 
   <!-- Histórico -->
@@ -583,8 +603,30 @@ document.getElementById('btnNextV').addEventListener('click', ()=>{
 
   // observe historic table changes to update difficult list
   const observer = new MutationObserver(()=> renderDifficult());
-  observer.observe(document.getElementById('histTable'), {childList:true, subtree:true});
-})();
+  observer.observe(document.getElementById('histTable'), {childList:true, subtree:true});})();
+
+  // Exemplo de onde você guarda os dados
+  let respostas = JSON.parse(localStorage.getItem("respostas")) || [];
+  let frasesRef = JSON.parse(localStorage.getItem("frasesRef")) || [];
+
+  // Função de salvar (exemplo)
+  function salvarHistorico() {
+    localStorage.setItem("respostas", JSON.stringify(respostas));
+    localStorage.setItem("frasesRef", JSON.stringify(frasesRef));
+  }
+
+  // Função de limpar histórico
+  function limparHistorico() {
+    localStorage.removeItem("respostas");
+    localStorage.removeItem("frasesRef");
+    respostas = [];
+    frasesRef = [];
+    alert("✅ Histórico limpo com sucesso!");
+  }
+
+  // Evento do botão
+  document.getElementById("clearHistoryBtn").addEventListener("click", limparHistorico);
+  
 </script>
 </body>
 </html>
