@@ -1,5 +1,5 @@
 {
-  "Viagem ✈️": [
+  "Viagem": [
     {"en": "Airport", "pt": "Aeroporto", "en_ex": "We arrived at the airport early.", "pt_ex": "Nós chegamos cedo ao aeroporto.", "topic": "Viagem"},
     {"en": "Passport", "pt": "Passaporte", "en_ex": "Don’t forget your passport!", "pt_ex": "Não esqueça seu passaporte!", "topic": "Viagem"},
     {"en": "Ticket", "pt": "Bilhete / Passagem", "en_ex": "I bought a ticket to London.", "pt_ex": "Eu comprei uma passagem para Londres.", "topic": "Viagem"},
@@ -11,7 +11,7 @@
     {"en": "Flight", "pt": "Voo", "en_ex": "Our flight was delayed.", "pt_ex": "Nosso voo foi atrasado.", "topic": "Viagem"},
     {"en": "Guide", "pt": "Guia", "en_ex": "The guide explained the history of the castle.", "pt_ex": "O guia explicou a história do castelo.", "topic": "Viagem"}
   ],
-  "Negócios 💼": [
+  "Negócios": [
     {"en": "Meeting", "pt": "Reunião", "en_ex": "The meeting starts at 10 a.m.", "pt_ex": "A reunião começa às 10 da manhã.", "topic": "Negócios"},
     {"en": "Contract", "pt": "Contrato", "en_ex": "I signed the contract yesterday.", "pt_ex": "Eu assinei o contrato ontem.", "topic": "Negócios"},
     {"en": "Salary", "pt": "Salário", "en_ex": "He receives a good salary.", "pt_ex": "Ele recebe um bom salário.", "topic": "Negócios"},
@@ -23,7 +23,7 @@
     {"en": "Report", "pt": "Relatório", "en_ex": "She finished the report last night.", "pt_ex": "Ela terminou o relatório ontem à noite.", "topic": "Negócios"},
     {"en": "Conference", "pt": "Conferência", "en_ex": "I will attend a conference in New York.", "pt_ex": "Eu vou participar de uma conferência em Nova York.", "topic": "Negócios"}
   ],
-  "Comida 🍔": [
+  "Comida": [
     {"en": "Bread", "pt": "Pão", "en_ex": "I eat bread every morning.", "pt_ex": "Eu como pão todas as manhãs.", "topic": "Comida"},
     {"en": "Cheese", "pt": "Queijo", "en_ex": "This pizza has a lot of cheese.", "pt_ex": "Esta pizza tem muito queijo.", "topic": "Comida"},
     {"en": "Meat", "pt": "Carne", "en_ex": "Do you eat meat?", "pt_ex": "Você come carne?", "topic": "Comida"},
@@ -35,7 +35,7 @@
     {"en": "Juice", "pt": "Suco", "en_ex": "Would you like some orange juice?", "pt_ex": "Você gostaria de um pouco de suco de laranja?", "topic": "Comida"},
     {"en": "Dessert", "pt": "Sobremesa", "en_ex": "Chocolate cake is my favorite dessert.", "pt_ex": "Bolo de chocolate é minha sobremesa favorita.", "topic": "Comida"}
   ],
-  "Saúde 🏥": [
+  "Saúde": [
     {"en": "Doctor", "pt": "Médico", "en_ex": "The doctor is very kind.", "pt_ex": "O médico é muito gentil.", "topic": "Saúde"},
     {"en": "Nurse", "pt": "Enfermeira", "en_ex": "The nurse helped me a lot.", "pt_ex": "A enfermeira me ajudou muito.", "topic": "Saúde"},
     {"en": "Hospital", "pt": "Hospital", "en_ex": "He is in the hospital.", "pt_ex": "Ele está no hospital.", "topic": "Saúde"},
@@ -47,7 +47,7 @@
     {"en": "Emergency", "pt": "Emergência", "en_ex": "Call 911 in case of emergency.", "pt_ex": "Ligue 911 em caso de emergência.", "topic": "Saúde"},
     {"en": "Blood", "pt": "Sangue", "en_ex": "He needs a blood test.", "pt_ex": "Ele precisa de um exame de sangue.", "topic": "Saúde"}
   ],
-  "Tecnologia 💻": [
+  "Tecnologia": [
     {"en": "Computer", "pt": "Computador", "en_ex": "I bought a new computer.", "pt_ex": "Eu comprei um novo computador.", "topic": "Tecnologia"},
     {"en": "Internet", "pt": "Internet", "en_ex": "The internet is very fast here.", "pt_ex": "A internet é muito rápida aqui.", "topic": "Tecnologia"},
     {"en": "Software", "pt": "Software", "en_ex": "This software is very useful.", "pt_ex": "Este software é muito útil.", "topic": "Tecnologia"},
@@ -59,7 +59,7 @@
     {"en": "Website", "pt": "Site", "en_ex": "This website is very popular.", "pt_ex": "Este site é muito popular.", "topic": "Tecnologia"},
     {"en": "Keyboard", "pt": "Teclado", "en_ex": "My keyboard is not working.", "pt_ex": "Meu teclado não está funcionando.", "topic": "Tecnologia"}
   ],
-  "Esportes ⚽": [
+  "Esportes": [
     {"en": "Soccer", "pt": "Futebol", "en_ex": "He plays soccer every weekend.", "pt_ex": "Ele joga futebol todo fim de semana.", "topic": "Esportes"},
     {"en": "Basketball", "pt": "Basquete", "en_ex": "Basketball is very popular in the USA.", "pt_ex": "O basquete é muito popular nos EUA.", "topic": "Esportes"},
     {"en": "Tennis", "pt": "Tênis", "en_ex": "She is learning to play tennis.", "pt_ex": "Ela está aprendendo a jogar tênis.", "topic": "Esportes"},
@@ -71,7 +71,7 @@
     {"en": "Match", "pt": "Partida", "en_ex": "The match was very exciting.", "pt_ex": "A partida foi muito emocionante.", "topic": "Esportes"},
     {"en": "Stadium", "pt": "Estádio", "en_ex": "The stadium was full of fans.", "pt_ex": "O estádio estava cheio de torcedores.", "topic": "Esportes"}
   ],
-  "Vida cotidiana 🏠": [
+  "Vida cotidiana": [
     {"en": "House", "pt": "Casa", "en_ex": "This is my new house.", "pt_ex": "Esta é minha nova casa.", "topic": "Vida cotidiana"},
     {"en": "Room", "pt": "Quarto", "en_ex": "My room is very clean.", "pt_ex": "Meu quarto está muito limpo.", "topic": "Vida cotidiana"},
     {"en": "Bed", "pt": "Cama", "en_ex": "The bed is comfortable.", "pt_ex": "A cama é confortável.", "topic": "Vida cotidiana"},
