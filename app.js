@@ -4,25 +4,52 @@ let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let palavrasDificeis = JSON.parse(localStorage.getItem("palavrasDificeis")) || [];
 let streak = parseInt(localStorage.getItem("streak")) || 0;
 
-function speakEn(text){
-  if(!('speechSynthesis' in window)) { 
-    alert('TTS não suportado neste navegador.'); 
-    return; 
-  }
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-US';
+/* ======== Controle de velocidade global ======== */
+let speechRate = 1;
+const rateInput  = document.getElementById('globalSpeed');
+const rateLabel  = document.getElementById('globalSpeedValue');
 
-  // pega a velocidade do controle
-  const speed = parseFloat(document.getElementById('speedControl')?.value) || 1;
-  u.rate = speed;
+function updateRate(){
+  speechRate = parseFloat(rateInput?.value || 1);
+  if (rateLabel) rateLabel.textContent = speechRate.toFixed(1) + 'x';
+  // cancela fala atual para a nova velocidade valer no próximo play
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+}
+
+if (rateInput) {
+  rateInput.addEventListener('input', updateRate);
+  updateRate(); // inicializa label e variável
+}
+
+/* ======== TTS com voz e velocidade (robusto) ======== */
+function speakEn(text){
+  if (!text) return;
+  if (!('speechSynthesis' in window)){
+    alert('Síntese de voz não suportada neste navegador.');
+    return;
+  }
+
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang  = 'en-US';
+  u.rate  = speechRate;  // << aplica a velocidade escolhida
   u.pitch = 1;
 
-  const vs = speechSynthesis.getVoices();
-  const pref = vs.find(v=>/en(-|_)?(US|GB|AU|CA|IN)?/i.test(v.lang)) || vs[0];
-  if(pref) u.voice = pref;
+  const speakNow = () => {
+    const voices = speechSynthesis.getVoices();
+    const voice  = voices.find(v => /^en(-|_)/i.test(v.lang)) || voices[0];
+    if (voice) u.voice = voice;
+    speechSynthesis.cancel(); // evita sobreposição
+    speechSynthesis.speak(u);
+  };
 
-  speechSynthesis.cancel(); 
-  speechSynthesis.speak(u);
+  // Em alguns navegadores as vozes carregam depois
+  if (speechSynthesis.getVoices().length === 0) {
+    speechSynthesis.onvoiceschanged = speakNow;
+    // fallback para garantir a execução
+    setTimeout(speakNow, 100);
+  } else {
+    speakNow();
+  }
 }
 
 // 🔹 Botão para repetir a pergunta em inglês
