@@ -52,13 +52,13 @@ function speakEn(text){
   }
 }
 
-// 🔹 Botão para repetir a pergunta em inglês
+/* ======== Botão para repetir a pergunta em inglês ======== */
 document.getElementById("btnPlayQ").addEventListener("click", () => {
   const text = document.getElementById("questionEn").innerText;
-  speakTextEn(text);
+  speakEn(text); // corrigido para usar speakEn
 });
 
-// 🔹 Carregar arquivos JSON externos
+/* ======== Carregar arquivos JSON externos ======== */
 async function carregarDados() {
   try {
     const resFrases = await fetch("data/frases.json");
@@ -75,7 +75,7 @@ async function carregarDados() {
   }
 }
 
-// 🔹 Escolher frase por nível
+/* ======== Escolher frase por nível ======== */
 function mostrarFraseAleatoria(nivel) {
   const frasesNivel = frases.filter(f => f.nivel === nivel);
   if (frasesNivel.length === 0) return;
@@ -85,10 +85,10 @@ function mostrarFraseAleatoria(nivel) {
   document.getElementById("pergunta").innerText = frase.pergunta;
   document.getElementById("resposta").innerText = frase.resposta;
 
-  speakTextEn(frase.pergunta); // ✅ já respeita velocidade global
+  speakEn(frase.pergunta); // ✅ já respeita velocidade global
 }
 
-// 🔹 Mostrar vocabulário por tópico
+/* ======== Mostrar vocabulário por tópico ======== */
 function mostrarVocabulario(topico) {
   const palavras = vocabulario[topico];
   if (!palavras || palavras.length === 0) return;
@@ -98,11 +98,10 @@ function mostrarVocabulario(topico) {
   document.getElementById("palavra").innerText = item.palavra;
   document.getElementById("traducao").innerText = item.traducao;
 
-  speakTextEn(item.palavra); // ✅ item aqui
-  
+  speakEn(item.palavra); // ✅ idem aqui
 }
 
-// 🔹 Verificar resposta
+/* ======== Verificar resposta ======== */
 function verificarResposta() {
   const respostaUsuario = document.getElementById("entradaResposta").value.trim().toLowerCase();
   const respostaCorreta = document.getElementById("resposta").innerText.trim().toLowerCase();
@@ -123,12 +122,12 @@ function verificarResposta() {
   document.getElementById("feedback").innerText = resultado;
 }
 
-// 🔹 Salvar progresso no navegador
+/* ======== Salvar progresso no navegador ======== */
 function salvarProgresso() {
   localStorage.setItem("historico", JSON.stringify(historico));
   localStorage.setItem("palavrasDificeis", JSON.stringify(palavrasDificeis));
   localStorage.setItem("streak", streak);
 }
 
-// 🔹 Inicializar app
+/* ======== Inicializar app ======== */
 window.onload = carregarDados;
